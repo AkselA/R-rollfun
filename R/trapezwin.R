@@ -15,4 +15,4 @@ trapezwin <- function(l=60, prop=0.5, l.slopes) {
 	trapez/sum(trapez)
 }
 
-plot(trapezwin(prop=0.10))
+# plot(trapezwin(prop=0.10))

@@ -7,7 +7,7 @@ slidemean <- function(x, w=5, by=1) {
     (cx[idx2] - cx[idx1]) / w
 }
 
-x <- c(0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 1, 0, 0)
-x <- c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)
-plot(x, type="b")
-lines(slidemean(x, 7))
+# x <- c(0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 1, 0, 0)
+# x <- c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0)
+# plot(x, type="b")
+# lines(slidemean(x, 7))
