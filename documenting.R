@@ -5,14 +5,6 @@ setwd("~/Documents/R/prosjekter")
 projname <- "rollfun"
 create(projname)
 
-document(projname)
-# load_all()
-
-# dev_example(projname)
-
-install_github(paste0("AkselA/R-", projname))
-library(projname)
-
 # turns objects found in "projname"/data.R (project root)
 # into data files available through data()
 # by saving them as .rda files in "projname"/data
@@ -42,7 +34,12 @@ add_data <- function(projname) {
     dtf
 }
 
+load_all(projname)
 add_data(projname)
-use_build_ignore("data.R", pkg=projname)
+use_build_ignore(c("data.R", "documenting.R"), pkg=projname)
+document(projname)
 
+# dev_example(projname)
 
+install_github(paste0("AkselA/R-", projname))
+library(projname)
