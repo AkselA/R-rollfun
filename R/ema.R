@@ -1,3 +1,4 @@
+#' @export
 ema <- function(x, a) {
     x <- c(x[1], x)
     a <- 1/a
