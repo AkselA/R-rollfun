@@ -12,8 +12,7 @@ rnz <- which(r != 0)
 
 stereo <- stereo[min(c(lnz, rnz)):max(c(lnz, rnz)),]
 stereo <- stereo[200:22250, ]
-stereo <- fade(stereo, fin=c(0.5, 500, 500), fout=c(0, 3000, 3000))
-matplot(stereo, type="l", lty=1)
+# matplot(stereo, type="l", lty=1)
 
 ### xyz
 set.seed(1)
