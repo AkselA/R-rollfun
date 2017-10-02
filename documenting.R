@@ -42,4 +42,4 @@ document(projname)
 # dev_example(projname)
 
 install_github(paste0("AkselA/R-", projname))
-library(projname)
+library(projname, character.only=TRUE)
