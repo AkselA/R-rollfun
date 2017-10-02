@@ -36,8 +36,12 @@ add_data <- function(projname) {
 
 load_all(projname)
 add_data(projname)
-use_build_ignore(c("data.R", "documenting.R"), pkg=projname)
+use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 document(projname)
+unload(projname)
+
+# run convenience script to add, commit and maybe push change
+system(paste0("open ", projname, "/commit.command"))
 
 # dev_example(projname)
 
