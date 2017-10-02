@@ -12,7 +12,7 @@ rnz <- which(r != 0)
 audio <- audio[min(c(lnz, rnz)):max(c(lnz, rnz)),]
 audio <- audio[200:22250, ]
 audio <- fade(audio, fin=c(0.5, 500, 500), fout=c(0, 3000, 3000))
-# matplot(audio, type="l", lty=1)
+matplot(audio, type="l", lty=1)
 
 ### xyz
 set.seed(1)

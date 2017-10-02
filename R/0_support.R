@@ -14,15 +14,19 @@ fade <- function(x, fin=c(0, 10, 15), fout=fin) {
     if (is.matrix(x) || is.data.frame(x)) {
     	lx <- nrow(x)
     } else lx <- length(x)
+    
+    iter <- 5
+    if (lx > 3000) iter <- 4
+    if (lx > 5000) iter <- 3
 	
 	fin_seq   <- rolliter(c(rep(fin[1], fin[2]), 
 	                       rep(1, lx-fin[2])), 
-                         fin[3], 5, TRUE, FALSE)
+                         fin[3], iter, TRUE, FALSE)
     fin_seq   <- fitrange(fin_seq, fin[1], 1)
 
 	fout_seq <- rolliter(c(rep(1, lx-fout[2]), 
 	                       rep(fout[1], fout[2])), 
-                         fout[3], 5, TRUE, FALSE)
+                         fout[3], iter, TRUE, FALSE)
     fout_seq <- fitrange(fout_seq, fout[1], 1)
     
     x * fout_seq * fin_seq
