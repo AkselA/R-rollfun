@@ -43,4 +43,3 @@ document(projname)
 
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
-?stereo

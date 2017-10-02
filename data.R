@@ -32,7 +32,3 @@ xyz2 <- fade(xyz2, fin=c(0.5, 40, 20), fout=c(0.4, 20, 10))
 
 ### remove intermediate files
 rm(l, r, lnz, rnz, per, x)
-
-x <- 1:100
-x <- ema(runif(100), 2)
-library(rollfun)
