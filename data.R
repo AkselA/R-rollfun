@@ -24,15 +24,10 @@ xyz <- x
 # plot(xyz, type="l")
 
 ### xyz2
-fin <- 30
-fout <- 20
-fade <- rolliter(c(rep(0.25, fin), 
-                   rep(1, l-fin-fout), 
-                   rep(0.2, fout)), 
-                   15, 5, TRUE, FALSE)
-xyz2 <- log(abs(xyz - 1)) * fade
+xyz2 <- log(abs(xyz - 1))
 xyz2 <- rolliter(xyz2, 9, 9, TRUE) + xyz2/5
-# plot(xyz2)
+xyz2 <- fade(xyz2, fin=c(0.25, 40, 20), fout=c(0.2, 20, 10))
+# plot(xyz2, col="#FF000088", lwd=1.5)
 
 ### remove intermediate files
 rm(l, r, lnz, rnz, per, x, fin, fout, fade)
