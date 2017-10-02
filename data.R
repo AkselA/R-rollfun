@@ -11,7 +11,7 @@ rnz <- which(r != 0)
 
 audio <- audio[min(c(lnz, rnz)):max(c(lnz, rnz)),]
 audio <- audio[200:9200, ]
-matplot(audio, type="l", lty=1)
+# matplot(audio, type="l", lty=1)
 
 ### xyz
 set.seed(1)
@@ -30,7 +30,7 @@ xyz2 <- fade(xyz2, fin=c(0.25, 40, 20), fout=c(0.2, 20, 10))
 # plot(xyz2, col="#FF000088", lwd=1.5)
 
 ### remove intermediate files
-rm(l, r, lnz, rnz, per, x, fin, fout, fade)
+rm(l, r, lnz, rnz, per, x)
 
 
 
