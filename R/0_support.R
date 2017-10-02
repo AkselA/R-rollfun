@@ -9,7 +9,6 @@ fitrange <- function(W, lower=-1, upper=1) {
 	(W - min(W, na.rm=TRUE)) * (newrange/oldrange) + lower
 }
 
-x <- -3:3
 fade <- function(x, fin=c(0, 10, 15), fout=fin) {
 	lx <- length(x)
 	fin_seq   <- rolliter(c(rep(fin[1], fin[2]), 
@@ -25,7 +24,7 @@ fade <- function(x, fin=c(0, 10, 15), fout=fin) {
     x * fout_seq * fin_seq
 }
 
-set.seed(1)
-r <- rnorm(200)
-plot(r, type="l")
-lines(fade(r), col="red", lwd=1.5)
+# set.seed(1)
+# r <- rnorm(200)
+# plot(r, type="l")
+# lines(fade(r), col="red", lwd=1.5)
