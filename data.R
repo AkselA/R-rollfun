@@ -11,7 +11,7 @@ lnz <- which(l != 0)
 rnz <- which(r != 0)
 
 stereo <- stereo[min(c(lnz, rnz)):max(c(lnz, rnz)),]
-stereo <- stereo[200:22250, ]
+stereo <- stereo[201:22250, ]
 # matplot(stereo, type="l", lty=1)
 
 ### xyz
@@ -33,5 +33,6 @@ xyz2 <- fade(xyz2, fin=c(0.5, 40, 20), fout=c(0.4, 20, 10))
 ### remove intermediate files
 rm(l, r, lnz, rnz, per, x)
 
-
-
+x <- 1:100
+x <- ema(runif(100), 2)
+library(rollfun)
