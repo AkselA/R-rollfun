@@ -1,3 +1,24 @@
+# turns text into roxygen2 comments
+# copy text, run roxcomm(), highlight text and paste
+roxcomm <- function(action="add") {
+    action <- match.arg(action, c("revert", "add", "detab"))
+    pat <- switch(action,
+                  revert=c("^#' ", ""),
+                     add=c("(.*)", "#' \\1"),
+                   detab=c("\t", "    "))
+
+    copy <- pipe("pbpaste")
+    lines <- readLines(copy)
+    lines <- gsub(pat[1], pat[2], lines)
+
+    clip <- pipe("pbcopy", "w")                       
+    writeLines(text=lines, con=clip)                               
+
+    close(clip)
+    close(copy)
+}
+
+
 require(roxygen2)
 require(devtools)
 
@@ -36,9 +57,10 @@ add_data <- function(projname) {
 
 load_all(projname)
 add_data(projname)
-use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 document(projname)
+?ema
 unload(projname)
+use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 
 # run convenience script to add, commit and maybe push change
 system(paste0("open ", projname, "/commit.command"))
