@@ -59,8 +59,19 @@ load_all(projname)
 add_data(projname)
 document(projname)
 ?ema
-unload(projname)
+# unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
+
+# check(projname, manual=TRUE)
+
+show_pdf <- function(package, lib.loc=NULL, opt="--force") { 
+     path <- find.package(package, lib.loc) 
+     system(paste(shQuote(file.path(R.home("bin"), "R")), 
+                  "CMD", "Rd2pdf", opt,
+                  shQuote(path))) 
+} 
+show_pdf(projname)
+
 
 # run convenience script to add, commit and maybe push change
 system(paste0("open ", projname, "/commit.command"))
@@ -69,3 +80,5 @@ system(paste0("open ", projname, "/commit.command"))
 
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
+
+

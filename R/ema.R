@@ -1,10 +1,24 @@
-#' Run Exponential Moving Average over vector
+#' Exponential Moving Average
 #' 
-#' \code{ema} returns a vector of exponentially smoothed values
+#' \code{ema} returns a vector whose values are the 
+#' exponentially smoothed values of the input vector
 #' 
 #' @param x a numeric vector
-#' @param a smoothing factor. Equvalent to \eqn{1 / \alpha}
+#' @param a smoothing factor
 #'
+#' @details With \eqn{Y_t}{Y[t]} being the input at time \eqn{t},
+#' \eqn{S_t}{S[t]} being the output at time \eqn{t} and
+#' \eqn{\alpha = 1/a}, the function can be defined like this:
+#' 
+#' \deqn{S_t =\left\{\begin{array}{lr}
+#' Y_1,                                           & t = 1 \\ 
+#' \alpha \cdot Y_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
+#' \end{array}\right.}{S[t] = \{Y[1] for t = 1; \alpha * Y[t] + (1 - \alpha) * S[t-1] for t > 1\}}
+#' 
+#' The function is also sometimes referred to as an 
+#' exponentially weighted moving average (EWMA).
+#' 
+#' 
 #' 
 #' @export
 #' @examples
@@ -32,3 +46,4 @@ ema <- function(x, a=2) {
     x[-1]
 }
 
+# roxcomm()

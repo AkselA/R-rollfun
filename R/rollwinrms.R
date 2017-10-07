@@ -1,6 +1,6 @@
 
-rollwinrms <- function(x, w, nf=4) {
-	sqrt(rollconv(x*x, w=w, nf=nf))
+rollwinrms <- function(x, w, B=7) {
+	sqrt(rollconv(x*x, w=w, B=B))
 }
 
 # yy <- yy-(mean(yy)/2)
