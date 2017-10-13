@@ -17,13 +17,15 @@ exponentially smoothed values of the input vector
 }
 \details{
 With \eqn{Y_t}{Y[t]} being the input at time \eqn{t},
-\eqn{S_t}{S[t]} being the output at time \eqn{t} and
-\eqn{\alpha = 1/a}, the function can be defined like this:
+\eqn{S_t}{S[t]} being the output at time \eqn{t}, and
+\eqn{\alpha = 1/a} \cr – the function can be defined like this:
 
 \deqn{S_t =\left\{\begin{array}{lr}
 Y_1,                                           & t = 1 \\ 
 \alpha \cdot Y_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
-\end{array}\right.}{S[t] = \{Y[1] for t = 1; \alpha * Y[t] + (1 - \alpha) * S[t-1] for t > 1\}}
+\end{array}\right.}{
+  S[t] = \{Y[1] for t = 1;
+  \alpha * Y[t] + (1 - \alpha) * S[t-1] for t > 1\}}
 
 The function is also sometimes referred to as an 
 exponentially weighted moving average (EWMA).

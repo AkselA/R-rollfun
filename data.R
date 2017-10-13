@@ -12,6 +12,7 @@ rnz <- which(r != 0)
 
 stereo <- stereo[min(c(lnz, rnz)):max(c(lnz, rnz)),]
 stereo <- stereo[201:22250, ]
+rownames(stereo) <- NULL
 # matplot(stereo, type="l", lty=1)
 
 ### xyz

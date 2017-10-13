@@ -37,7 +37,7 @@ add_data <- function(projname) {
 	if (!file.exists(datapath)) {
 		stop(paste("Could not find", datapath))
 	}
-    dir.create(projname, "data", showWarnings=FALSE)
+    dir.create(file.path(projname, "data"), showWarnings=FALSE)
     tmp.env <- new.env()
 	source(datapath, local=tmp.env)
 	tmp.list <- as.list(tmp.env, sorted=TRUE)
@@ -58,7 +58,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?ema
+?rollconv
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 
@@ -67,7 +67,7 @@ use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 show_pdf <- function(package, lib.loc=NULL, opt="--force") { 
      path <- find.package(package, lib.loc) 
      system(paste(shQuote(file.path(R.home("bin"), "R")), 
-                  "CMD", "Rd2pdf", opt,
+                  "CMD", "Rd2pdf", paste(opt, collapse=" "),
                   shQuote(path))) 
 } 
 show_pdf(projname)
@@ -80,5 +80,4 @@ system(paste0("open ", projname, "/commit.command"))
 
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
-
 
