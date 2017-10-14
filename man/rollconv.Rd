@@ -18,7 +18,11 @@ a discrete window of any shape}
 meaning that the sequences will be padded to a length that has \cr
 prime factors 1, 2, 3, 5 and 7}
 
-\item{scale.window}{logical; should the window be scaled so that its values sum to 1?}
+\item{scale.window}{logical; should the window be scaled so that its values
+sum to 1?}
+
+\item{fill}{single character or numeric; used for filling out start/end. \cr
+default is NA. set to NULL for no fill}
 }
 \description{
 A windowed rolling mean function based on optimized
@@ -29,7 +33,11 @@ This convolution filtering relies on the convolution theorem and the \cr
 Cooley–Tukey FFT algorithm to ensure efficient computation. \cr
 The FFT is fastest when the length of the series being transformed is smooth \cr 
 (i.e., has many factors). If this is not the case, the transform \cr
-may take a long time to compute and will use a large amount of memory.
+may take a long time to compute and will use a large amount of memory. \cr
+There is a trade-off between smoothness and series length. A smoothness of 2 will \cr
+make calculations more efficient, but will also on average require the series \cr
+to be padded more, making it longer, and hence require more resources. \cr
+A smoothness of 5 or 7 is generally OK.
 }
 \examples{
 rollconv(rep(0:1, 3, each=4), 5, fill=NULL)
@@ -43,6 +51,32 @@ matlines(cbind(
   rollconv(x, w=c(1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1)),
   rollconv(x, w=11)
   ), lty=1, lwd=2)
+
+
+### filtering out harmonics
+x <- rep(c(1, 2, 4, 2), 10, each=3)
+x <- x + (seq_along(x)/50) * sin(seq_along(x)/20)
+
+# a triangular filter will in general produce a result with less
+# ringing artefacts than a simple box/rectangular.
+
+# Here the 'steppyness' is filtered out using a triangular filter
+# of about twice the width of the steps.
+r1 <- rollconv(x, w=c(1, 2, 3, 2, 1), fill=NA)
+
+# using a rectangular filter retains the triangular shape of the wave
+r2 <- rollconv(x, w=3, fill=NA)
+
+# A simple box filter will isolate the underlying smooth wave as long as
+# the width is carefully tuned
+r3 <- rollconv(x, w=12, fill=NA)
+r4 <- rollconv(x, w=13, fill=NA)
+
+plot(x, pch=16, cex=0.4)
+lines(r2, col="skyblue", lwd=2)
+lines(r1, col="blue", lwd=2)
+lines(r4, col="green", lwd=2)
+lines(r3, col="darkgreen", lwd=2)
 
 
 opar <- par(no.readonly=TRUE)
