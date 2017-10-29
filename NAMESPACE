@@ -2,3 +2,4 @@
 
 export(ema)
 export(rollconv)
+export(rollfun)

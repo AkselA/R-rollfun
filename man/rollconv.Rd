@@ -34,7 +34,8 @@ Cooley–Tukey FFT algorithm to ensure efficient computation. \cr
 The FFT is fastest when the length of the series being transformed is smooth \cr 
 (i.e., has many factors). If this is not the case, the transform \cr
 may take a long time to compute and will use a large amount of memory. \cr
-There is a trade-off between smoothness and series length. A smoothness of 2 will \cr
+There is a trade-off between smoothness and series length.
+A smoothness of 2 will \cr
 make calculations more efficient, but will also on average require the series \cr
 to be padded more, making it longer, and hence require more resources. \cr
 A smoothness of 5 or 7 is generally OK.
