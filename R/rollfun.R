@@ -13,6 +13,7 @@
 #' @param list.out logical; should output be returned as list?
 #' @param simplify logical; should output be simplified? \cr
 #'   Typically from list to data.frame or matrix
+#' @param partial logical; should partial results at the ends be calculated?
 #' 
 #' @export
 #' @examples
@@ -133,42 +134,83 @@
 #' models <- rollfun(dtf, 25, lm.fun, list.out=TRUE, simplify=TRUE)
 #' plot(as.ts(models), nc=2, mar.multi=c(0, 4.1, 0, 1))
 
-rollfun <- function(x, w, FUN, ..., by=1, list.out=FALSE, simplify=TRUE) {
+rollfun <- function(x, w, FUN, ..., by=1, 
+  list.out=FALSE, simplify=TRUE, partial=FALSE) {
+  	
+  	if (partial & by > 1) {
+  		partial <- FALSE
+  		warning(paste("  partial set to FALSE.", 
+  		              "partial=TRUE and by > 1 don't mix",
+  		              "(at the present)."),
+  		              call.=FALSE)
+  	}
+  	
     w <- w %/% 2
+    lenx <- NROW(x)
     
-    if (ncol(x) == 1 || is.null(dim(x))) {
-        z <- seq(w+1, length(x)-w, by=by)
+    if (NCOL(x) == 1) {
+        z <- seq(w+1, lenx-w, by=by)
 	    if (list.out) {
-	        v <- as.list(rep(NA, length(x)))
+	        v <- as.list(rep(NA, lenx))
 	        for (i in z) {
 		        v[[i]] <- FUN(x[(i - w):(i + w)], ...)
 	        }
+            if (partial) {
+		        ip <- c(1:w, (lenx-w):lenx)
+		        for (i in ip) {
+		        	ix <- (i - w):(i + w)
+		        	ix <- ix[ix > 0 & ix <= lenx]
+			        v[[i]] <- FUN(x[ix], ...)
+		        }
+	        }
 	        if (simplify) v <- do.call(rbind, v)
 	    } else {
-	        v <- rep(NA, length(x))
+	        v <- rep(NA, lenx)
 	        for (i in z) {
 		        v[i] <- FUN(x[(i - w):(i + w)], ...)
 	        }
-	    }
+            if (partial) {
+		        ip <- c(1:w, (lenx-w):lenx)
+		        for (i in ip) {
+		        	ix <- (i - w):(i + w)
+		        	ix <- ix[ix > 0 & ix <= lenx]
+			        v[i] <- FUN(x[ix], ...)
+		        }
+	        }
+	    }    
 	}
 	
     if (length(dim(x)) == 2) {
-        z <- seq(w+1, nrow(x)-w, by=by)
+        z <- seq(w+1, lenx-w, by=by)
 	    if (list.out) {
-	        v <- as.list(rep(NA, nrow(x)))
+	        v <- as.list(rep(NA, lenx))
 	        for (i in z) {
 		        v[[i]] <- FUN(x[(i - w):(i + w), ], ...)
 	        }
+            if (partial) {
+		        ip <- c(1:w, (lenx-w):lenx)
+		        for (i in ip) {
+		        	ix <- (i - w):(i + w)
+		        	ix <- ix[ix > 0 & ix <= lenx]
+			        v[[i]] <- FUN(x[ix, ], ...)
+		        }
+	        }
 	        if (simplify) v <- do.call(rbind, v)
 	    } else {
-	        v <- rep(NA, nrow(x))
+	        v <- rep(NA, lenx)
 	        for (i in z) {
 		        v[i] <- FUN(x[(i - w):(i + w), ], ...)
+	        }
+            if (partial) {
+		        ip <- c(1:w, (lenx-w):lenx)
+		        for (i in ip) {
+		        	ix <- (i - w):(i + w)
+		        	ix <- ix[ix > 0 & ix <= lenx]
+			        v[i] <- FUN(x[ix, ], ...)
+		        }
 	        }
 	    }
     }
     v
 }
-
-
 

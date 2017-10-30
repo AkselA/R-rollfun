@@ -4,7 +4,8 @@
 \alias{rollfun}
 \title{Apply Rolling Function}
 \usage{
-rollfun(x, w, FUN, ..., by = 1, list.out = FALSE, simplify = TRUE)
+rollfun(x, w, FUN, ..., by = 1, list.out = FALSE, simplify = TRUE,
+  partial = FALSE)
 }
 \arguments{
 \item{x}{vector, matrix or data.frame; data representing a series \cr
@@ -22,6 +23,8 @@ of observations}
 
 \item{simplify}{logical; should output be simplified? \cr
 Typically from list to data.frame or matrix}
+
+\item{partial}{logical; should partial results at the ends be calculated?}
 }
 \description{
 Apply a rolling function to the margins of data. \cr
