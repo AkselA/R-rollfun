@@ -81,4 +81,6 @@ system(paste0("open ", projname, "/commit.command"))
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
 
-library(zoo)
+zoo:::rollapply.zoo
+
+stats:::plot.acf

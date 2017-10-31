@@ -4,7 +4,7 @@
 \alias{rollfun}
 \title{Apply Rolling Function}
 \usage{
-rollfun(x, w, FUN, ..., by = 1, list.out = FALSE, simplify = TRUE,
+rollfun(x, w, FUN, ..., by = 1, list.out = FALSE, simplify = FALSE,
   partial = FALSE)
 }
 \arguments{
@@ -28,7 +28,23 @@ Typically from list to data.frame or matrix}
 }
 \description{
 Apply a rolling function to the margins of data. \cr
-functionally very similar to zoo::rollapply()
+}
+\details{
+\code{rollfun()} is functionally very similar to \code{zoo::rollapply()}, 
+but slightly simplified. \cr
+\code{w} and \code{by} can only be single positive integers, meaning that window width
+and step length are always constant. While \code{w} takes all positive integers,
+only windows of odd width are calculated. Even integers are rounded up.
+When applied to a multicolumn object all columns will be passed to \code{FUN},
+unless otherwise stated in \code{FUN}.
+Output can be forced to list format with \code{list.out=TRUE}. If output from \code{FUN}
+is anything other than scalar, \code{list.out} must be set to \code{TRUE}.
+\code{simplify=TRUE} will apply \code{do.call(rbind, .)} to the output, meaning that
+the 'simplest' it can get is a one column matrix.
+\code{simplify} is ignored if \code{list.out=TRUE}.
+Output will always be the same length (or nrow) as input. Ends are padded with \code{NA},
+except when \code{partial=TRUE}. When \code{by > 1} both ends and empty
+intervals will be padded with \code{NA}.
 }
 \examples{
 # rolling median absolute deviation (mad)
@@ -37,17 +53,19 @@ rollfun(rnorm(15), 7, mad, constant=1)
 
 # rolling mad vs rolling sd
 set.seed(1)
-r <- rnorm(200, 0, sin(1:200/20) + 2)
-plot(r)
-for (i in 1:10) {
-    lines(rollfun(r, i*2, mad), col="#FF000088")
-    lines(rollfun(r, i*2, sd) * -1, col="#0000FF88")
+r <- rnorm(500, 0, sin(1:500/50) + 2) * rexp(500)
+f <- function(x) c(mad(x), sd(x) * -1)
+
+plot(r, pch=16, cex=0.5)
+for (i in 1:25) {
+	rf <- rollfun(r, i*5, f, list.out=TRUE, simplify=TRUE, partial=TRUE)
+    matlines(rf, col=c("#FF000066", "#0000FF66"), lty=1)
 }
 
 
 # plot rolling 5-number statistic
 data(xyz)
-summ.df <- rollfun(xyz, 33, summary, list.out=TRUE)
+summ.df <- rollfun(xyz, 33, summary, list.out=TRUE, simplify=TRUE)
 
 plot(xyz, pch=16, cex=0.4)
 matlines(summ.df[, -4], type="l", lty=1, lwd=2, 
@@ -61,31 +79,13 @@ s2 <- sin(1:1500/1500*2*pi) + 1.5
 xr <- rbeta(length(s1), s1, s2)
  
 probs <- seq(0, 1, , 101)
-r <- rollfun(xr, 150, list.out=TRUE,
+r <- rollfun(xr, 150, list.out=TRUE, partial=TRUE, simplify=TRUE,
   function(z) quantile(z, probs, names=FALSE))
 
-matplot(r, type="l", lty=1, lwd=0.6, col=rainbow(ncol(r), start=0.05))
-
-
-# rolling mean and pseudo 95\% confidence intervals
-meanAndError <- function(x) {
-    m <- mean(x)
-    s <- 1.96*sd(x)/sqrt(w)
-       c(mean=m,
-        ci.up=m+s, 
-      ci.down=m-s)
-}
-
-set.seed(1)
-w <- 25
-l <- 250
-x <- rnorm(l, 0, seq(1, 20, length.out=l))
-rf <- rollfun(x, w, meanAndError, list.out=TRUE)
-    
-df2 <- data.frame(time=seq_along(x), x, rf)
-plot(df2[1:2], type="l", lwd=0.5)
-matlines(df2[,1], df2[,-(1:2)], col=c(1, 2, 3, 3), lty=1, lw=1.5)
-
+cf <- colorRampPalette(c("#00FF44", "cyan", "#0044FF"), space="Lab", bias=0.8)
+matplot(r, type="l", lty=1, lwd=0.4+(0.0005*(-50:50)^2),
+  col=cf(101), xaxs="i", yaxs="i")
+box()
 
 # rolling piecewise linear regression
 lm.fun <- function(x) {
@@ -147,4 +147,32 @@ lm.fun <- function(x) {
 
 models <- rollfun(dtf, 25, lm.fun, list.out=TRUE, simplify=TRUE)
 plot(as.ts(models), nc=2, mar.multi=c(0, 4.1, 0, 1))
+
+
+### demonstrating output formats
+# when FUN output is scalar
+rollfun(1:9, 3, mean)
+
+# setting list.out=TRUE makes it a list of scalars
+rollfun(1:9, 3, mean, list.out=TRUE)
+
+# setting list.out=TRUE and simplify=TRUE returns a single column matrix
+rollfun(1:9, 3, mean, list.out=TRUE, simplify=TRUE)
+
+# when FUN output is a vector
+# the following will fail as output is not scalar
+rollfun(1:9, 3, function(x) c(x[1], x[2]))
+
+# setting list.out=TRUE makes it work
+rollfun(1:9, 3, function(x) c(x[1], x[2]), list.out=TRUE)
+
+# setting list.out=TRUE and simplify=TRUE returns a matrix
+rollfun(1:9, 3, function(x) c(x[1], x[2]), list.out=TRUE, simplify=TRUE)
+
+# when FUN output is a list
+# setting list.out=TRUE makes it work
+rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE)
+
+# setting list.out=TRUE and simplify=TRUE returns a matrix
+rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE, simplify=TRUE)
 }
