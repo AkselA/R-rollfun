@@ -29,6 +29,7 @@ xyz <- x
 xyz2 <- log(abs(xyz - 1))
 xyz2 <- rolliter(xyz2, 9, 9, TRUE) - xyz2/5
 xyz2 <- fade(xyz2, fin=c(0.5, 40, 20), fout=c(0.4, 20, 10))
+xyz2 <- xyz2/max(abs(xyz2))
 # plot(xyz2, col="#FF0000FF", lwd=1.5, type="l", pch=16)
 
 ### remove intermediate files

@@ -3,6 +3,7 @@ cummean <- function(x) {
 	cumsum(x)/seq_along(x)
 }
 
+#' @export
 rollmeanp <- function(x=1:8, n=5) {
 	mn <- TTR::runMean(x, n)
 	mn <- mn[!is.na(mn)]
@@ -16,6 +17,7 @@ rollmeanp <- function(x=1:8, n=5) {
 	c(front, mn, back)
 }
 
+#' @export
 rolliter <- function(x, w=9, iter=5, partial=FALSE, sharp=FALSE) {	
 	w <- as.integer(round(w))
     lx <- length(x)
@@ -51,39 +53,17 @@ rolliter <- function(x, w=9, iter=5, partial=FALSE, sharp=FALSE) {
 # points(rolliter(r, w, 4, partial=TRUE), type="o", col="purple", cex=0.5, pch=16)
 # points(rolliter(r, w, 5, partial=TRUE), type="o", col="blue", cex=0.5, pch=16)
 
-# y <- c(rep(1, 16), 2, rep(1, 16))
-# m1 <- rolliter(y, 3, 6)
-# m2 <- rolliter(y, 2, 5)
+# y <- c(rep(0, 16), 1, rep(0, 16))
+# col <- rainbow(20, start=0.1)
+# plot(y, ylim=c(0, 0.4))
 
-# plot(y)
-# lines(m1)
-# lines(m2)
-# abline(v=which(y == 2))
-
-
-# y <- c(rep(1, 30), 2, rep(1, 30))
-# m1 <- rolliter(y, 9, 2)
-# m2 <- rolliter(y, 9, 3)
-# m3 <- rolliter(y, 9, 4)
-# m4 <- rolliter(y, 9, 5)
-
-# plot(m1, col="red", lwd=2, type="l")
-# lines(m2, col="blue", lwd=2)
-# lines(m3, col="green", lwd=2)
-# lines(m4, col="orange", lwd=2)
+# for (i in 1:length(col)) {
+    # lines(rolliter(y, 3, i, partial=TRUE), col=col[i])
+# }
 
 
-# y <- c(rep(1, 30), 2, rep(1, 30))
-# m1 <- rolliter(y, 10, 5, FALSE)
-# m2 <- rolliter(y, 10, 5, TRUE)
-# m3 <- rolliter(y, 9, 5, FALSE)
-
-# plot(m1, col="red", lwd=2, type="l", ylim=c(1, 1.1))
-# lines(m2, col="blue", lwd=2)
-# lines(m3, col="green", lwd=2)
-
-## sharp=TRUE can in certain cases smooth more while 
-## dropping fewer data points at the ends.
+# # sharp=TRUE can in certain cases smooth more while 
+# # dropping fewer data points at the ends.
 # x <- c(rep(0, 11), 1, 0, 0, 0, 0, 1, rep(0, 11))
 # r1 <- rolliter(x, 5, iter=6, sharp=TRUE)
 # r2 <- rolliter(x, 3, iter=6, sharp=FALSE)

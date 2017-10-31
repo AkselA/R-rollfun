@@ -3,3 +3,6 @@
 export(ema)
 export(rollconv)
 export(rollfun)
+export(rolliter)
+export(rollmeanp)
+export(rollrms)
