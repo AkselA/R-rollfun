@@ -1,3 +1,4 @@
+#' @export
 trapezwin <- function(l=60, prop=0.5, l.slopes) {
 	# creates an isosceles trapezoid window
 	# with 'prop' giving the proportion of the

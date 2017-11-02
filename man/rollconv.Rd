@@ -4,7 +4,7 @@
 \alias{rollconv}
 \title{Windowed Convolution Filtering}
 \usage{
-rollconv(x, w, B = 7, scale.window = TRUE, fill = NA)
+rollconv(x, w, B = 7, scale.window = TRUE, fill = NA, partial = FALSE)
 }
 \arguments{
 \item{x}{a numeric vector}
@@ -59,7 +59,7 @@ x <- rep(c(1, 2, 4, 2), 10, each=3)
 x <- x + (seq_along(x)/50) * sin(seq_along(x)/20)
 
 # a triangular filter will in general produce a result with less
-# ringing artefacts than a simple box/rectangular.
+# ringing artefacts than a simple box/rectangular filter.
 
 # Here the 'steppyness' is filtered out using a triangular filter
 # of about twice the width of the steps.
@@ -107,4 +107,15 @@ lines(y3, col="#00AAFF88", lwd=2)
 lines(y4, col="#0000FF88", lwd=2)
 
 par(opar)
+
+
+# calculating partial results gets slow with wide windows
+set.seed(1)
+l <- 2e4
+r <- log1p(rgamma(l, 1.2+sin(1:l/l*pi*4)))
+plot(r, type="l", col="#00000044")
+rr1 <- rollconv(r, w=trapezwin(1e4, 0.8), partial=TRUE)
+lines(rr1, col=5, lwd=1)
+rr1 <- rollconv(r, w=trapezwin(1e4, 0.8), partial=FALSE)
+lines(rr1, col=4, lwd=3)
 }

@@ -1,23 +1,31 @@
+#' Rolling RMS
+#'
+#' Wrapper for \code{rollconv()} offering a quick rolling windowed RMS
+#' 
+#' @param x numeric vector; data
+#' @param w integer or numeric vector; width or shape of the rolling RMS window
+#' @param na.pad logical; should the ends be padded with \code{NA}?
+#' @param B prime; smoothness as used by the FFT algorithm 
+#'
+#' @export
+#' @examples
+#' w <- 50
+#' weights.para <- winweights(w, type="parabolic")
+#' weights.hann <- winweights(w, type="hann")
+#' 
+#' plot(weights.hann, type="l", ann=FALSE)
+#' lines(weights.para)
+#' 
+#' data(xyz2)
+#' yy <- xyz2
+#' 
+#' plot(yy, col="grey", type="l")
+#' lines(rollwinrms(yy, weights.hann, partial=TRUE), col="blue", lwd=2)
+#' lines(rollwinrms(yy, weights.para, partial=TRUE), col="green", lwd=2)
+#' lines(rollwinrms(yy, w, partial=TRUE), col="red", lwd=2)
 
-rollwinrms <- function(x, w, B=7) {
-	sqrt(rollconv(x*x, w=w, B=B))
+rollwinrms <- function(x, w, ...) {
+	sqrt(rollconv(x*x, w=w, ...))
 }
 
-# yy <- yy-(mean(yy)/2)
-# plot(winweights(50, type="parabolic"), ylim=c(0, 0.04), type="l", ann=FALSE)
-# lines(winweights(50, type="cosine"))
-# lines(winweights(50, type="cosine-smooth"))
-# lines(winweights(50, type="hann"))
 
-# w <- 11
-# weights.para <- winweights(w, type="parabolic")
-# weights.cosi <- winweights(w, type="cosine")
-# weights.cosm <- winweights(w, type="cosine-smooth")
-# weights.hann <- winweights(w, type="hann")
-
-# plot(yy, col="red", type="l")
-# lines(rollwinrms(yy, w))
-# lines(rollwinrms(yy, weights.para))
-# lines(rollwinrms(yy, weights.cosi))
-# lines(rollwinrms(yy, weights.cosm))
-# lines(rollwinrms(yy, weights.hann))

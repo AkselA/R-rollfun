@@ -19,7 +19,6 @@ rollrms(x, w, na.pad = TRUE, partial = FALSE)
 Wrapper for \code{TTR::runMean()} offering a quick rolling RMS
 }
 \examples{
-set.seed(1)
 data(xyz2)
 r <- xyz2
 r.rms <- rollrms(r, w=25, partial=TRUE)

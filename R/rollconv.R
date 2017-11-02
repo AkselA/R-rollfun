@@ -51,7 +51,7 @@
 #' x <- x + (seq_along(x)/50) * sin(seq_along(x)/20)
 #' 
 #' # a triangular filter will in general produce a result with less
-#' # ringing artefacts than a simple box/rectangular.
+#' # ringing artefacts than a simple box/rectangular filter.
 #' 
 #' # Here the 'steppyness' is filtered out using a triangular filter
 #' # of about twice the width of the steps.
@@ -99,7 +99,18 @@
 #' lines(y4, col="#0000FF88", lwd=2)
 #' 
 #' par(opar)
-rollconv <- function(x, w, B=7, scale.window=TRUE, fill=NA) {
+#' 
+#' 
+#' # calculating partial results gets slow with wide windows
+#' set.seed(1)
+#' l <- 2e4
+#' r <- log1p(rgamma(l, 1.2+sin(1:l/l*pi*4)))
+#' plot(r, type="l", col="#00000044")
+#' rr1 <- rollconv(r, w=trapezwin(1e4, 0.8), partial=TRUE)
+#' lines(rr1, col=5, lwd=1)
+#' rr1 <- rollconv(r, w=trapezwin(1e4, 0.8), partial=FALSE)
+#' lines(rr1, col=4, lwd=3)
+rollconv <- function(x, w, B=7, scale.window=TRUE, fill=NA, partial=FALSE) {
 	pn <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29)
 	if (B > max(pn)) stop("B is too large")
 	lx <- length(x)
@@ -115,13 +126,36 @@ rollconv <- function(x, w, B=7, scale.window=TRUE, fill=NA) {
 	}
 	
 	cn <- nextn(lx+lw, factors=pn[pn <= B])+1
+	xx <- x
     x <- c(x, rep(0.000001, cn-(lx+lw)))
     
-    NA1 <- rep(fill[1], floor((lw-1)/2))
-    NA2 <- rep(fill[2], ceiling((lw-1)/2))
-
     z <- convolve(x, w, type="filter")
-    z <- c(NA1, z[1:(lx-(lw-1))], NA2)
+    
+    if (partial) {
+    	lbegin <- floor((lw-1) / 2)
+        lend <- ceiling((lw-1) / 2)
+		
+		# front
+		vf <- vector(length=lbegin)
+		xx_f <- c(rep(NA, lbegin), xx[1:(lw-1)])
+		for (i in 1:length(vf)) {
+		    vf[i] <- weighted.mean(xx_f[i:(i+lw-1)], w, na.rm=TRUE)
+		}
+		
+		# back
+		vb <- vector(length=lend)
+		xx_b <- c(xx[(lx-lw+2):lx], rep(NA, lend))
+		for (i in 1:length(vb)) {
+		    vb[i] <- weighted.mean(xx_b[i:(i+lw-1)], w, na.rm=TRUE)
+		}
+		
+        z <- c(vf, z[1:(lx-(lw-1))], vb)
+        
+    } else {
+	    NA1 <- rep(fill[1], floor((lw-1)/2))
+	    NA2 <- rep(fill[2], ceiling((lw-1)/2))
+	    z <- c(NA1, z[1:(lx-(lw-1))], NA2)
+    }
     z
 }
 
