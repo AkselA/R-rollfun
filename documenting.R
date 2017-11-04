@@ -1,14 +1,49 @@
+linewrap <- function(txt, width=85, add.cr=TRUE) {
+	lin <- paste(txt, collapse=" ")
+	lin <- gsub("#'", " ", lin)
+	lin <- gsub("[ ]+", " ", lin)
+	words <- strsplit(lin, '\\{[^}]+ (*SKIP)(*FAIL)| ', perl=TRUE)[[1]]
+	words <- words[!nchar(words) == 0]
+	words.clean <- gsub("\\\\[a-zA-Z]+\\{([^}]+)\\}", "\\1", words)
+	words.length <- nchar(words.clean) + 1
+	words.length[words.clean == "\\cr"] <- 0
+	
+	llist <- vector()
+	llength <- 0
+	
+	for (i in seq_along(words.length)) {
+		llength <- llength + words.length[i]
+		if (length(words.clean[i-1]) != 0 && words.clean[i-1] == "\\cr") llength <- width + 1
+		if (llength > width) llength <- words.length[i]
+		llist[[i]] <- llength
+	}
+	words[words.clean == "\\cr"] <- ""
+	lline <- cumsum(diff(c(0, llist)) < 0) + 1
+	llines <- aggregate(words, list(lline), paste, collapse=" ")[[2]]
+	llines <- sub(" +$", "", llines)
+	llines <- sub("^ +", "", llines)
+	
+	if (add.cr) llines <- paste(llines, "\\cr")
+	
+	llines
+}
+
 # turns text into roxygen2 comments
-# copy text, run roxcomm(), highlight text and paste
-roxcomm <- function(action="add") {
+# cut/copy text, run roxcomm(), paste
+roxcomm <- function(action="add", max.width=0) {
     action <- match.arg(action, c("revert", "add", "detab"))
     pat <- switch(action,
-                  revert=c("^#' ", ""),
+                  revert=c("^#'[ ]*", ""),
                      add=c("(.*)", "#' \\1"),
                    detab=c("\t", "    "))
 
     copy <- pipe("pbpaste")
     lines <- readLines(copy)
+    
+    if (max.width > 0) {
+    	lines <- linewrap(lines, width=max.width, add.cr=TRUE)
+    }
+    
     lines <- gsub(pat[1], pat[2], lines)
 
     clip <- pipe("pbcopy", "w")                       
@@ -17,7 +52,8 @@ roxcomm <- function(action="add") {
     close(clip)
     close(copy)
 }
-roxcomm()
+roxcomm("add", 85)
+
 
 require(roxygen2)
 require(devtools)
@@ -58,7 +94,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?rollrms
+?rollfun
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 

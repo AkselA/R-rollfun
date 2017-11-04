@@ -30,21 +30,17 @@ Typically from list to data.frame or matrix}
 Apply a rolling function to the margins of data. \cr
 }
 \details{
-\code{rollfun()} is functionally very similar to \code{zoo::rollapply()}, 
-but slightly simplified. \cr
-\code{w} and \code{by} can only be single positive integers, meaning that window width
-and step length are always constant. While \code{w} takes all positive integers,
-only windows of odd width are calculated. Even integers are rounded up.
-When applied to a multicolumn object all columns will be passed to \code{FUN},
-unless otherwise stated in \code{FUN}.
-Output can be forced to list format with \code{list.out=TRUE}. If output from \code{FUN}
-is anything other than scalar, \code{list.out} must be set to \code{TRUE}.
-\code{simplify=TRUE} will apply \code{do.call(rbind, .)} to the output, meaning that
-the 'simplest' it can get is a one column matrix.
-\code{simplify} is ignored if \code{list.out=TRUE}.
-Output will always be the same length (or nrow) as input. Ends are padded with \code{NA},
-except when \code{partial=TRUE}. When \code{by > 1} both ends and empty
-intervals will be padded with \code{NA}.
+\code{rollfun()} is functionally very similar to \code{zoo::rollapply()}, but slightly simplified. \cr
+\code{w} and \code{by} can only be single positive integers, meaning that window width and step \cr
+length are always constant. While \code{w} takes all positive integers, only windows of odd \cr
+width are calculated. Even integers are rounded up. When applied to a multicolumn \cr
+object all columns will be passed to \code{FUN}, unless otherwise stated in \code{FUN}. \cr
+Output can be forced to list format with \code{list.out=TRUE}. If output from \code{FUN} is \cr
+anything other than scalar, \code{list.out} must be set to \code{TRUE}. \code{simplify=TRUE} will apply \cr
+\code{do.call(rbind, .)} to the output, meaning that the 'simplest' it can get is a one \cr
+column matrix. \code{simplify} is ignored if \code{list.out=TRUE}. Output will always be the same \cr
+length (or nrow) as input. Ends are padded with \code{NA}, except when \code{partial=TRUE}. When \cr
+\code{by > 1} both ends and empty intervals will be padded with \code{NA}. \cr
 }
 \examples{
 # rolling median absolute deviation (mad)
