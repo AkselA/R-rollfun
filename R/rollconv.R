@@ -159,4 +159,3 @@ rollconv <- function(x, w, B=7, scale.window=TRUE, fill=NA, partial=FALSE) {
     z
 }
 
-

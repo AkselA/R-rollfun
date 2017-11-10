@@ -52,7 +52,7 @@ roxcomm <- function(action="add", max.width=0) {
     close(clip)
     close(copy)
 }
-roxcomm("add", 85)
+roxcomm("add", 0)
 
 
 require(roxygen2)
@@ -94,7 +94,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?rollfun
+?rolliter
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 
