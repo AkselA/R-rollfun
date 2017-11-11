@@ -1,19 +1,38 @@
+#' Trapepezoid windows
+#' 
+#' Create isosceles (symmetric) trapezoid windows
+#' 
+#' @param l integer; length of the window
+#' @param prop numeric; proportion of the length covered by slopes
+#' @param l.slopes integer; length of the slopes. Overrides \code{prop}
+#' @param ground logical; should the legs of the trapezoid be 'grounded'
 #' @export
-trapezwin <- function(l=60, prop=0.5, l.slopes) {
-	# creates an isosceles trapezoid window
-	# with 'prop' giving the proportion of the
-	# width covered by the slopes. 
-	# prop=0 => rectangle
-	# prop=1 => triangle
-	if (missing(l.slopes)) {
-		l.slopes <- round(l*prop/2)
+#' @examples
+#' x <- 100
+#' plot(0, type="n", xlim=c(0, x), ylim=c(0, 2/x))
+#' for (i in (1:20)/20){
+#'     lines(trapezwin(x, prop=i))
+#' }
+#' 
+#' x <- 10000
+#' plot(0, type="n", xlim=c(0, x), ylim=c(0, 2/x))
+#' for (i in ceiling(seq(1, x %/% 2, length.out=20))){
+#'     lines(trapezwin(x, l.slopes=i))
+#' }
+#' 
+trapezwin <- function(l=10, prop=0.5, l.slopes) {
+	tri <- 1 - abs(seq(-1, 1, length.out=l))
+	if (!missing(l.slopes)) {
+		if (l.slopes < 1 || l.slopes > l %/% 2) {
+			stop("l.slopes needs to be in [1, l %/% 2]")
+		}
+	    tri[(l.slopes+1):(l-l.slopes)] <- tri[l.slopes+1]
+	} else {
+		tri[tri > prop] <- prop
 	}
-	l.flat <- l-2*l.slopes
-	if (l.flat < 0) stop("slopes are too long")
-	slopes <- (1:l.slopes)/(l.slopes+1)
-	flat <- rep(1, l.flat)
-	trapez <- c(slopes, flat, rev(slopes))
-	trapez/sum(trapez)
+	tri <- tri/sum(tri)
+	tri[c(1, l)] <- tri[2]/l/10
+	tri/sum(tri)
 }
 
-# plot(trapezwin(prop=0.10))
+

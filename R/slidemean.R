@@ -17,4 +17,3 @@ slidemean <- function(x, w=5, by=1) {
     cx <- c(0, cumsum(x))
     (cx[idx2] - cx[idx1]) / w
 }
-
