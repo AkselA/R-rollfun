@@ -2,19 +2,21 @@
 #' 
 #' Generate coefficients for various popular window functions
 #' 
-#' 
+#' @param width integer; width of the window
+#' @param type charachter; name of the window function
+#' @param step.adj logical; should the end points be a small step above zero?
+#' @param lev.adj character; how the levels should be scaled
 #' @export
 #' @examples
-#' # Time and frequency plots of each window 
-#' name <- c("square", "triangular",
-#'           "epanechnikov", "biweight", "triweight",
+#' # Time and frequency plots for each window 
+#' name <- c("square", "triangle", "epanechnikov", "biweight", "triweight",
 #'           "tricube", "cosine-smooth", "optcosine",
 #'           "hann", "hamming", "blackman", "nuttall", "blackman-nuttall",
 #'           "blackman-harris", "flat-top", "kaiser-bessel",
-#'           "lanczos", "sinc")
+#'           "lanczos", "sinc", "poisson", "hann-poisson")
 #' 
 #' w <- 99
-#' par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
+#' par(mfcol=c(5, 4), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0), oma=c(0.1, 0.1, 0.1, 0.1))
 #' for (i in name) {
 #'     plot(winweights(w, type=i, a=3), type="l", xlab="", ylab="", ylim=c(-0.02, 0.06))
 #'     grid(col="#00000022", lty=1)
@@ -23,19 +25,19 @@
 #' 
 #' set.seed(1)
 #' w <- 99
-#' x <- rnorm(2e4)
+#' x <- rnorm(5e4)
 #' i <- 1
-#' par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
+#' par(mfcol=c(5, 4), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0), oma=c(0.1, 0.1, 0.1, 0.1))
 #' for (i in 1:length(name)) {
-#'     win <- winweights(w, type=name[i], step.adj=TRUE, lev.adj="mean", a=3)
+#'     win <- winweights(w, type=name[i], step.adj=FALSE, lev.adj="sum", a=3)
 #'     rol <- rollconv(x, win, partial=FALSE, scale.window=FALSE)
-#'     spectrum(na.omit(rol), main="", xlab="", ylab="", sub="", lwd=0.2, ylim=c(1e-12, 1e5))
+#'     spectrum(na.omit(rol), main="", xlab="", ylab="", sub="", lwd=0.1, ylim=c(1e-16, 1))
 #'     grid(col="#00000022", lty=1)
 #'     legend("topright", legend=name[i], bty="n", text.col="blue", adj=c(0.2, 0))
 #' }
 #' 
 
-winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="sum", a=3) {
+winweights <- function(width=11, type="epanechnikov", a=3, step.adj=TRUE, lev.adj="sum") {
 
     if (width<2) stop("width must be 2 or larger", call.=FALSE)
 
@@ -44,7 +46,7 @@ winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="su
       "tricube", "cosine", "sine", "optcosine", "cosine-smooth",
       "hann", "hamming", "blackman",  "nuttall", "blackman-nuttall",
       "blackman-harris", "flattop", "flat-top", "flat top",  "kaiser", "kaiser-bessel",
-      "lanczos", "sinc")
+      "lanczos", "sinc", "poisson", "hann-poisson")
           
     type <- match.arg(tolower(type), typenames)
     
@@ -102,7 +104,11 @@ winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="su
                                  kernel },
                      "sinc"={ kernel <- sin(pi*s*a)/(pi*s*a)
                               kernel[is.na(kernel)] <- 1
-                              kernel } )
+                              kernel },
+                     "poisson"=exp((-a*abs(width-1-(2*n))) / (width-1)),
+                     "hann-poisson"=((sin((pi*n)/(width-1)))^2) * 
+                                    exp((-a*abs(width-1-(2*n))) / (width-1))
+                     )
     
     l.adj <- 1
     if (tolower(lev.adj)=="sum") l.adj <- sum(kernel)
@@ -111,31 +117,5 @@ winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="su
     kernel/l.adj
 }
 
-# Time and frequency plots of each window 
-name <- c("square", "triangular",
-          "epanechnikov", "biweight", "triweight",
-          "tricube", "cosine-smooth", "optcosine",
-          "hann", "hamming", "blackman", "nuttall", "blackman-nuttall",
-          "blackman-harris", "flat-top", "kaiser-bessel",
-          "lanczos", "sinc")
 
-w <- 99
-par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
-for (i in name) {
-    plot(winweights(w, type=i, a=3), type="l", xlab="", ylab="", ylim=c(-0.02, 0.06))
-    grid(col="#00000022", lty=1)
-    legend("topright", legend=i, bty="n", text.col="blue", adj=c(0.2, 0))
-}
 
-set.seed(1)
-w <- 99
-x <- rnorm(2e4)
-i <- 1
-par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
-for (i in 1:length(name)) {
-    win <- winweights(w, type=name[i], step.adj=TRUE, lev.adj="mean", a=3)
-    rol <- rollconv(x, win, partial=FALSE, scale.window=FALSE)
-    spectrum(na.omit(rol), main="", xlab="", ylab="", sub="", lwd=0.2, ylim=c(1e-12, 1e5))
-    grid(col="#00000022", lty=1)
-    legend("topright", legend=name[i], bty="n", text.col="blue", adj=c(0.2, 0))
-}

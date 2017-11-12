@@ -4,23 +4,31 @@
 \alias{winweights}
 \title{Discrete windows}
 \usage{
-winweights(width = 11, type = "epanechnikov", step.adj = TRUE,
-  lev.adj = "sum", a = 3)
+winweights(width = 11, type = "epanechnikov", a = 3, step.adj = TRUE,
+  lev.adj = "sum")
+}
+\arguments{
+\item{width}{integer; width of the window}
+
+\item{type}{charachter; name of the window function}
+
+\item{step.adj}{logical; should the end points be a small step above zero?}
+
+\item{lev.adj}{character; how the levels should be scaled}
 }
 \description{
 Generate coefficients for various popular window functions
 }
 \examples{
-# Time and frequency plots of each window 
-name <- c("square", "triangular",
-          "epanechnikov", "biweight", "triweight",
+# Time and frequency plots for each window 
+name <- c("square", "triangle", "epanechnikov", "biweight", "triweight",
           "tricube", "cosine-smooth", "optcosine",
           "hann", "hamming", "blackman", "nuttall", "blackman-nuttall",
           "blackman-harris", "flat-top", "kaiser-bessel",
-          "lanczos", "sinc")
+          "lanczos", "sinc", "poisson", "hann-poisson")
 
 w <- 99
-par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
+par(mfcol=c(5, 4), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0), oma=c(0.1, 0.1, 0.1, 0.1))
 for (i in name) {
     plot(winweights(w, type=i, a=3), type="l", xlab="", ylab="", ylim=c(-0.02, 0.06))
     grid(col="#00000022", lty=1)
@@ -29,13 +37,13 @@ for (i in name) {
 
 set.seed(1)
 w <- 99
-x <- rnorm(2e4)
+x <- rnorm(5e4)
 i <- 1
-par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
+par(mfcol=c(5, 4), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0), oma=c(0.1, 0.1, 0.1, 0.1))
 for (i in 1:length(name)) {
-    win <- winweights(w, type=name[i], step.adj=TRUE, lev.adj="mean", a=3)
+    win <- winweights(w, type=name[i], step.adj=FALSE, lev.adj="sum", a=3)
     rol <- rollconv(x, win, partial=FALSE, scale.window=FALSE)
-    spectrum(na.omit(rol), main="", xlab="", ylab="", sub="", lwd=0.2, ylim=c(1e-12, 1e5))
+    spectrum(na.omit(rol), main="", xlab="", ylab="", sub="", lwd=0.1, ylim=c(1e-16, 1))
     grid(col="#00000022", lty=1)
     legend("topright", legend=name[i], bty="n", text.col="blue", adj=c(0.2, 0))
 }
