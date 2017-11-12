@@ -86,9 +86,9 @@ winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="su
 # w <- 99
 # par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
 # for (i in name) {
-	# plot(winweights(w, type=i, a=3), type="l", xlab="", ylab="", ylim=c(-0.02, 0.06))
-	# grid(col="#00000022", lty=1)
-	# legend("topright", legend=i, bty="n", text.col="blue", adj=c(0, 0))
+    # plot(winweights(w, type=i, a=3), type="l", xlab="", ylab="", ylim=c(-0.02, 0.06))
+    # grid(col="#00000022", lty=1)
+    # legend("topright", legend=i, bty="n", text.col="blue", adj=c(0, 0))
 # }
 
 # set.seed(1)
@@ -97,9 +97,9 @@ winweights <- function(width=11, type="epanechnikov", step.adj=TRUE, lev.adj="su
 # i <- 1
 # par(mfcol=c(6, 3), mar=c(1.5, 1.5, 0.5, 0.5), mgp=c(0, 0.6, 0))
 # for (i in 1:length(name)) {
-	# win <- winweights(w, type=name[i], step.adj=TRUE, lev.adj="mean", a=3)
-	# rol <- rollconv(x, win, partial=TRUE, scale.window=FALSE)
-	# spectrum(rol, main="", xlab="", ylab="", sub="", lwd=0.2, ylim=c(1e-9, 1e5))
-	# grid(col="#00000022", lty=1)
-	# legend("topright", legend=name[i], bty="n", text.col="blue", adj=c(0.2, 0))
+    # win <- winweights(w, type=name[i], step.adj=TRUE, lev.adj="mean", a=3)
+    # rol <- rollconv(x, win, partial=TRUE, scale.window=FALSE)
+    # spectrum(rol, main="", xlab="", ylab="", sub="", lwd=0.2, ylim=c(1e-9, 1e5))
+    # grid(col="#00000022", lty=1)
+    # legend("topright", legend=name[i], bty="n", text.col="blue", adj=c(0.2, 0))
 # }
