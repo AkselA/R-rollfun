@@ -12,8 +12,6 @@ trapezwin(l = 10, prop = 0.5, l.slopes)
 \item{prop}{numeric; proportion of the length covered by slopes}
 
 \item{l.slopes}{integer; length of the slopes. Overrides \code{prop}}
-
-\item{ground}{logical; should the legs of the trapezoid be 'grounded'}
 }
 \description{
 Create isosceles (symmetric) trapezoid windows

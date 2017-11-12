@@ -5,7 +5,6 @@
 #' @param l integer; length of the window
 #' @param prop numeric; proportion of the length covered by slopes
 #' @param l.slopes integer; length of the slopes. Overrides \code{prop}
-#' @param ground logical; should the legs of the trapezoid be 'grounded'
 #' @export
 #' @examples
 #' x <- 100
