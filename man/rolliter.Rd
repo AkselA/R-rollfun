@@ -2,7 +2,7 @@
 % Please edit documentation in R/rolliter.R
 \name{rolliter}
 \alias{rolliter}
-\title{Apply Rolling Function}
+\title{Iterative Rolling Mean}
 \usage{
 rolliter(x, w = 5, iter = 4, partial = FALSE, sharp = FALSE)
 }
@@ -17,7 +17,7 @@ rolliter(x, w = 5, iter = 4, partial = FALSE, sharp = FALSE)
 for each iteration?}
 }
 \description{
-Apply a rolling function to the margins of data
+Apply an iterative rolling mean
 }
 \examples{
 # Increasing the number of iterations progressively reduces the ringing

@@ -1,6 +1,7 @@
-linewrap <- function(txt, width=85, add.cr=TRUE) {
+linewrap <- function(txt, width=90, strip.cr=FALSE, add.cr=TRUE) {
 	lin <- paste(txt, collapse=" ")
 	lin <- gsub("#'", " ", lin)
+	if (strip.cr) lin <- gsub("\\\\cr", "", lin)
 	lin <- gsub("[ ]+", " ", lin)
 	words <- strsplit(lin, '\\{[^}]+ (*SKIP)(*FAIL)| ', perl=TRUE)[[1]]
 	words <- words[!nchar(words) == 0]
@@ -30,7 +31,7 @@ linewrap <- function(txt, width=85, add.cr=TRUE) {
 
 # turns text into roxygen2 comments
 # cut/copy text, run roxcomm(), paste
-roxcomm <- function(action="add", max.width=0) {
+roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=TRUE) {
     action <- match.arg(action, c("revert", "add", "detab"))
     pat <- switch(action,
                   revert=c("^#'[ ]*", ""),
@@ -41,7 +42,7 @@ roxcomm <- function(action="add", max.width=0) {
     lines <- readLines(copy)
     
     if (max.width > 0) {
-    	lines <- linewrap(lines, width=max.width, add.cr=TRUE)
+    	lines <- linewrap(lines, width=max.width, strip.cr=strip.cr, add.cr=add.cr)
     }
     
     lines <- gsub(pat[1], pat[2], lines)
@@ -52,7 +53,7 @@ roxcomm <- function(action="add", max.width=0) {
     close(clip)
     close(copy)
 }
-roxcomm("add", 0)
+roxcomm("add", 90, strip.cr=FALSE, add.cr=TRUE)
 
 
 require(roxygen2)
@@ -94,7 +95,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?winweights
+?rollfun
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 

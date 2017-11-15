@@ -1,4 +1,3 @@
-#  ################################################################################
 #' Apply Rolling Function
 #'
 #' Apply a rolling function to the margins of data. \cr
@@ -9,6 +8,7 @@
 #' @param FUN closure; function to be applied
 #' @param ... optional arguments passed to FUN
 #' @param by single integer; step length of the window
+#' @param front logical; when \code{w} is odd, should the result be biased to the front?
 #' @param list.out logical; should output be returned as list?
 #' @param simplify logical; should output be simplified? \cr
 #'   Typically from list to data.frame or matrix
@@ -16,16 +16,14 @@
 #' 
 #' @details
 #' \code{rollfun()} is functionally very similar to \code{zoo::rollapply()}, but slightly simplified. \cr
-#' \code{w} and \code{by} can only be single positive integers, meaning that window width and step \cr
-#' length are always constant. While \code{w} takes all positive integers, only windows of odd \cr
-#' width are calculated. Even integers are rounded up. When applied to a multi column \cr
-#' object all columns will be passed to \code{FUN}, unless otherwise stated in \code{FUN}. \cr
-#' Output can be forced to list format with \code{list.out=TRUE}. If output from \code{FUN} is \cr
-#' anything other than scalar, \code{list.out} must be set to \code{TRUE}. \code{simplify=TRUE} will apply \cr
-#' \code{do.call(rbind, .)} to the output, meaning that the 'simplest' it can get is a one \cr
-#' column matrix. \code{simplify} is ignored if \code{list.out=TRUE}. Output will always be the same \cr
-#' length (or nrow) as input. Ends are padded with \code{NA}, except when \code{partial=TRUE}. When \cr
-#' \code{by > 1} both ends and empty intervals will be padded with \code{NA}. \cr
+#' \code{w} and \code{by} can only be single positive integers, meaning that window width and step length \cr
+#' are always constant. When applied to a multi column object all columns will be passed to \cr
+#' \code{FUN}, unless otherwise stated in \code{FUN}. Output can be forced to list format with \cr
+#' \code{list.out=TRUE}. If output from \code{FUN} is anything other than scalar, \code{list.out} must be set to \cr
+#' \code{TRUE}. \code{simplify=TRUE} will apply \code{do.call(rbind, .)} to the output, meaning that the \cr
+#' 'simplest' it can get is a one column matrix. \code{simplify} is ignored if \code{list.out=TRUE}. \cr
+#' Output will always be the same length (or nrow) as input. Ends are padded with \code{NA}, except \cr
+#' when \code{partial=TRUE}. When \code{by > 1} both ends and empty intervals will be padded with \code{NA}. \cr
 #' 
 #' @export
 #' @examples
@@ -158,7 +156,16 @@
 #' # setting list.out=TRUE and simplify=TRUE returns a matrix
 #' rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE, simplify=TRUE)
 
-rollfun <- function(x, w, FUN, ..., by=1, 
+
+# x <- c(0, 0, 0, 1, 0, 0, 0, NA, 0)
+# rollfun2(x, 4, mean, na.rm=TRUE, list.out=FALSE, front=TRUE, simplify=FALSE, partial=TRUE)
+# rolliter(x, 4, 1)
+# rollconv(x, w)
+# w <- 4
+# FUN <- mean
+# partial <- TRUE
+
+rollfun <- function(x, w, FUN, ..., by=1, front=TRUE,
   list.out=FALSE, simplify=FALSE, partial=FALSE) {
   	
   	if (partial & by > 1) {
@@ -169,20 +176,28 @@ rollfun <- function(x, w, FUN, ..., by=1,
   		              call.=FALSE)
   	}
   	
+  	even <- (w+1) %% 2
     w <- w %/% 2
     lenx <- NROW(x)
+
+    if (front) {
+        z <- seq(w+1-even, lenx-w, by=by)
+        index <- function() (i - (w-even)):(w + i)
+    } else {
+        z <- seq(w+1, lenx-w+even, by=by)
+        index <- function() (i - w):(w + i - even)	
+    }
     
     if (NCOL(x) == 1) {
-        z <- seq(w+1, lenx-w, by=by)
 	    if (list.out) {
 	        v <- as.list(rep(NA, lenx))
 	        for (i in z) {
-		        v[[i]] <- FUN(x[(i - w):(i + w)], ...)
+		        v[[i]] <- FUN(x[index()], ...)
 	        }
             if (partial) {
-		        ip <- c(1:w, (lenx-w):lenx)
+		        ip <- which(is.na(v))
 		        for (i in ip) {
-		        	ix <- (i - w):(i + w)
+		        	ix <- index()
 		        	ix <- ix[ix > 0 & ix <= lenx]
 			        v[[i]] <- FUN(x[ix], ...)
 		        }
@@ -191,12 +206,12 @@ rollfun <- function(x, w, FUN, ..., by=1,
 	    } else {
 	        v <- rep(NA, lenx)
 	        for (i in z) {
-		        v[i] <- FUN(x[(i - w):(i + w)], ...)
+		        v[i] <- FUN(x[index()], ...)
 	        }
             if (partial) {
-		        ip <- c(1:w, (lenx-w):lenx)
+		        ip <- which(is.na(v))
 		        for (i in ip) {
-		        	ix <- (i - w):(i + w)
+		        	ix <- index()
 		        	ix <- ix[ix > 0 & ix <= lenx]
 			        v[i] <- FUN(x[ix], ...)
 		        }
@@ -205,16 +220,15 @@ rollfun <- function(x, w, FUN, ..., by=1,
 	}
 	
     if (length(dim(x)) == 2) {
-        z <- seq(w+1, lenx-w, by=by)
 	    if (list.out) {
 	        v <- as.list(rep(NA, lenx))
 	        for (i in z) {
-		        v[[i]] <- FUN(x[(i - w):(i + w), ], ...)
+		        v[[i]] <- FUN(x[index(), ], ...)
 	        }
             if (partial) {
-		        ip <- c(1:w, (lenx-w):lenx)
+		        ip <- which(is.na(v))
 		        for (i in ip) {
-		        	ix <- (i - w):(i + w)
+		        	ix <- index()
 		        	ix <- ix[ix > 0 & ix <= lenx]
 			        v[[i]] <- FUN(x[ix, ], ...)
 		        }
@@ -223,12 +237,12 @@ rollfun <- function(x, w, FUN, ..., by=1,
 	    } else {
 	        v <- rep(NA, lenx)
 	        for (i in z) {
-		        v[i] <- FUN(x[(i - w):(i + w), ], ...)
+		        v[i] <- FUN(x[index(), ], ...)
 	        }
             if (partial) {
-		        ip <- c(1:w, (lenx-w):lenx)
+		        ip <- which(is.na(v))
 		        for (i in ip) {
-		        	ix <- (i - w):(i + w)
+		        	ix <- index()
 		        	ix <- ix[ix > 0 & ix <= lenx]
 			        v[i] <- FUN(x[ix, ], ...)
 		        }

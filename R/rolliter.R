@@ -9,7 +9,7 @@ cummean <- function(x) {
 #' 
 #' @param x numeric; data vector
 #' @param w integer; width of the rolling window
-#' @param front logical; when \code{w} is odd, should it be biased to the front?
+#' @param front logical; when \code{w} is odd, should the new values be biased to the front?
 #' 
 #' @details
 #' Wrapper/extension for \code{TTR::runMean()}
@@ -36,9 +36,9 @@ rollmeanp <- function(x, w=5, front=TRUE) {
 	c(front, mn, back)
 }
 
-#' Apply Rolling Function
+#' Iterative Rolling Mean
 #'
-#' Apply a rolling function to the margins of data
+#' Apply an iterative rolling mean
 #' 
 #' @param x numeric; data vector
 #' @param w integer; width of the rolling window

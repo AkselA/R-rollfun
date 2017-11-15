@@ -4,8 +4,8 @@
 \alias{rollfun}
 \title{Apply Rolling Function}
 \usage{
-rollfun(x, w, FUN, ..., by = 1, list.out = FALSE, simplify = FALSE,
-  partial = FALSE)
+rollfun(x, w, FUN, ..., by = 1, front = TRUE, list.out = FALSE,
+  simplify = FALSE, partial = FALSE)
 }
 \arguments{
 \item{x}{vector, matrix or data.frame; data representing a series \cr
@@ -19,6 +19,8 @@ of observations}
 
 \item{by}{single integer; step length of the window}
 
+\item{front}{logical; when \code{w} is odd, should the result be biased to the front?}
+
 \item{list.out}{logical; should output be returned as list?}
 
 \item{simplify}{logical; should output be simplified? \cr
@@ -31,16 +33,14 @@ Apply a rolling function to the margins of data. \cr
 }
 \details{
 \code{rollfun()} is functionally very similar to \code{zoo::rollapply()}, but slightly simplified. \cr
-\code{w} and \code{by} can only be single positive integers, meaning that window width and step \cr
-length are always constant. While \code{w} takes all positive integers, only windows of odd \cr
-width are calculated. Even integers are rounded up. When applied to a multi column \cr
-object all columns will be passed to \code{FUN}, unless otherwise stated in \code{FUN}. \cr
-Output can be forced to list format with \code{list.out=TRUE}. If output from \code{FUN} is \cr
-anything other than scalar, \code{list.out} must be set to \code{TRUE}. \code{simplify=TRUE} will apply \cr
-\code{do.call(rbind, .)} to the output, meaning that the 'simplest' it can get is a one \cr
-column matrix. \code{simplify} is ignored if \code{list.out=TRUE}. Output will always be the same \cr
-length (or nrow) as input. Ends are padded with \code{NA}, except when \code{partial=TRUE}. When \cr
-\code{by > 1} both ends and empty intervals will be padded with \code{NA}. \cr
+\code{w} and \code{by} can only be single positive integers, meaning that window width and step length \cr
+are always constant. When applied to a multi column object all columns will be passed to \cr
+\code{FUN}, unless otherwise stated in \code{FUN}. Output can be forced to list format with \cr
+\code{list.out=TRUE}. If output from \code{FUN} is anything other than scalar, \code{list.out} must be set to \cr
+\code{TRUE}. \code{simplify=TRUE} will apply \code{do.call(rbind, .)} to the output, meaning that the \cr
+'simplest' it can get is a one column matrix. \code{simplify} is ignored if \code{list.out=TRUE}. \cr
+Output will always be the same length (or nrow) as input. Ends are padded with \code{NA}, except \cr
+when \code{partial=TRUE}. When \code{by > 1} both ends and empty intervals will be padded with \code{NA}. \cr
 }
 \examples{
 # rolling median absolute deviation (mad)

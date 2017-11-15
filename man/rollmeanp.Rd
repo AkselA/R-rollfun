@@ -11,7 +11,7 @@ rollmeanp(x, w = 5, front = TRUE)
 
 \item{w}{integer; width of the rolling window}
 
-\item{front}{logical; when \code{w} is odd, should it be biased to the front?}
+\item{front}{logical; when \code{w} is odd, should the new values be biased to the front?}
 }
 \description{
 Rolling mean that includes partial results from the beginning and end
