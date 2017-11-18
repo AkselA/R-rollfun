@@ -3,6 +3,13 @@ cummean <- function(x) {
 	cumsum(x)/seq_along(x)
 }
 
+rollmeanna <- function(x, w, front=TRUE) {
+	rollfun(x, w, mean, na.rm=TRUE, front=front, partial=TRUE)
+}
+
+rr <- rollmeanna(z, 4)
+any(is.na(rr))
+
 #' Rolling Mean
 #'
 #' Rolling mean that includes partial results from the beginning and end 
@@ -71,6 +78,13 @@ rollmeanp <- function(x, w=5, front=TRUE) {
 #' }
 #' 
 #' 
+#' # Smoothing a binomial series with high missingness
+#' z <- c(0, 1, 0, 1, NA, NA, NA, NA, 1, 1, NA, 0, NA, 1, 1, 0, NA, NA,
+#'        0, 0, 1, 0, NA, NA, NA, 0, 1, 1, NA, NA, 0, 0, NA, NA, NA, NA, 
+#'        0, 1, 0, NA, NA, NA, NA, NA, NA, 1, 0, 0, NA, NA, 0, 0, NA, 0)
+#' plot(z)
+#' 
+#' 
 #' # Using the experimental sharp=TRUE appears to give a sharper transition while
 #' # still keeping high frequency ringing at a low level
 #' par(mfcol=c(4, 2), mar=c(2, 2, 1, 1), oma=c(0, 0, 0.5, 0))
@@ -107,10 +121,16 @@ rolliter <- function(x, w=5, iter=4, partial=FALSE, sharp=FALSE) {
 	} else {		
 		i <- 1
 		while (i <= iter & w > 1) {
-		    x <- rollmeanp(x, w, front=(i %% 2) * !sharp)
+			if (any(is.na(x))){
+		        x <- rollmeanna(x, w, front=(i %% 2) * !sharp)
+		    }  else {
+		    	x <- rollmeanp(x, w, front=(i %% 2) * !sharp)
+		    }
 		    i <- i + 1
 		    w <- w - sharp
 		}
         x
 	}	
 }
+
+

@@ -155,15 +155,7 @@
 #' 
 #' # setting list.out=TRUE and simplify=TRUE returns a matrix
 #' rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE, simplify=TRUE)
-
-
-# x <- c(0, 0, 0, 1, 0, 0, 0, NA, 0)
-# rollfun2(x, 4, mean, na.rm=TRUE, list.out=FALSE, front=TRUE, simplify=FALSE, partial=TRUE)
-# rolliter(x, 4, 1)
-# rollconv(x, w)
-# w <- 4
-# FUN <- mean
-# partial <- TRUE
+#' 
 
 rollfun <- function(x, w, FUN, ..., by=1, front=TRUE,
   list.out=FALSE, simplify=FALSE, partial=FALSE) {

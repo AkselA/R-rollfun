@@ -171,4 +171,5 @@ rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE)
 
 # setting list.out=TRUE and simplify=TRUE returns a matrix
 rollfun(1:9, 3, function(x) list(x[1], x[2]), list.out=TRUE, simplify=TRUE)
+
 }

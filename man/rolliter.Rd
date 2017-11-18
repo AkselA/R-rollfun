@@ -43,6 +43,13 @@ for (i in 1:length(col)) {
 }
 
 
+# Smoothing a binomial series with high missingness
+z <- c(0, 1, 0, 1, NA, NA, NA, NA, 1, 1, NA, 0, NA, 1, 1, 0, NA, NA,
+       0, 0, 1, 0, NA, NA, NA, 0, 1, 1, NA, NA, 0, 0, NA, NA, NA, NA, 
+       0, 1, 0, NA, NA, NA, NA, NA, NA, 1, 0, 0, NA, NA, 0, 0, NA, 0)
+plot(z)
+
+
 # Using the experimental sharp=TRUE appears to give a sharper transition while
 # still keeping high frequency ringing at a low level
 par(mfcol=c(4, 2), mar=c(2, 2, 1, 1), oma=c(0, 0, 0.5, 0))
