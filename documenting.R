@@ -31,7 +31,7 @@ linewrap <- function(txt, width=90, strip.cr=FALSE, add.cr=TRUE) {
 
 # turns text into roxygen2 comments
 # cut/copy text, run roxcomm(), paste
-roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=TRUE) {
+roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=FALSE) {
     action <- match.arg(action, c("revert", "add", "detab"))
     pat <- switch(action,
                   revert=c("^#'[ ]*", ""),
@@ -53,7 +53,8 @@ roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=TRUE) {
     close(clip)
     close(copy)
 }
-roxcomm("add", 90, strip.cr=FALSE, add.cr=TRUE)
+roxcomm("add", 0)
+roxcomm("add", 0, strip.cr=FALSE, add.cr=FALSE)
 
 
 require(roxygen2)
@@ -95,7 +96,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?rollfun
+?rolliter
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 
@@ -117,4 +118,3 @@ system(paste0("open ", projname, "/commit.command"))
 
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
-winweights

@@ -44,10 +44,16 @@ for (i in 1:length(col)) {
 
 
 # Smoothing a binomial series with high missingness
-z <- c(0, 1, 0, 1, NA, NA, NA, NA, 1, 1, NA, 0, NA, 1, 1, 0, NA, NA,
-       0, 0, 1, 0, NA, NA, NA, 0, 1, 1, NA, NA, 0, 0, NA, NA, NA, NA, 
-       0, 1, 0, NA, NA, NA, NA, NA, NA, 1, 0, 0, NA, NA, 0, 0, NA, 0)
+set.seed(1)
+z <- rbinom(100, 1, prob=seq(0.8, 0.2, length.out=100))
+z[sample(as.logical(0:1), length(z), replace=TRUE, prob=c(0.6, 0.4))] <- NA
+
 plot(z)
+
+lines(rolliter(z, 6, 1, partial=TRUE), col="grey80")
+lines(rolliter(z, 6, 2, partial=TRUE), col="grey60")
+lines(rolliter(z, 6, 4, partial=TRUE), col="grey30")
+lines(rolliter(z, 6, 6, partial=TRUE), col="black")
 
 
 # Using the experimental sharp=TRUE appears to give a sharper transition while
