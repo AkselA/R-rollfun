@@ -54,14 +54,14 @@ roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=FALSE) {
     close(copy)
 }
 roxcomm("add", 0)
-roxcomm("add", 0, strip.cr=FALSE, add.cr=FALSE)
+roxcomm("add", 80, add.cr=TRUE)
 
 
 require(roxygen2)
 require(devtools)
 
 setwd("~/Documents/R/prosjekter")
-projname <- "rollfun"
+projname <- "image"
 create(projname)
 
 # turns objects found in "projname"/data.R (project root)
@@ -96,7 +96,7 @@ add_data <- function(projname) {
 load_all(projname)
 add_data(projname)
 document(projname)
-?rolliter
+
 # unload(projname)
 use_build_ignore(c("data.R", "documenting.R", "commit.command"), pkg=projname)
 
@@ -118,3 +118,4 @@ system(paste0("open ", projname, "/commit.command"))
 
 install_github(paste0("AkselA/R-", projname))
 library(projname, character.only=TRUE)
+

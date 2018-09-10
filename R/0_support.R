@@ -3,10 +3,16 @@ norma <- function(W, c=0, r=2) {
 }
 
 fitrange <- function(W, lower=-1, upper=1) {
-	if(lower>upper) warning("upper bound must be strictly larger than lower bound")
+	if (lower > upper) warning("upper bound must be strictly larger than lower bound")
+	if (length(W) == 0) return(numeric(0))
 	newrange <- upper - lower
 	oldrange <- max(W, na.rm=TRUE) - min(W, na.rm=TRUE)
-	(W - min(W, na.rm=TRUE)) * (newrange/oldrange) + lower
+	if (oldrange == 0) {
+		d <- abs(W - lower) < abs(W - upper)
+		ifelse(d, lower, upper)
+	} else {
+	    (W - min(W, na.rm=TRUE)) * (newrange/oldrange) + lower
+    }
 }
 
 fade <- function(x, fin=c(0, 10, 15), fout=fin) {

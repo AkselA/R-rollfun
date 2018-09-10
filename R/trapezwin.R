@@ -21,11 +21,11 @@
 #'     lines(trapezwin(x, l.slopes=i))
 #' }
 #' 
-#' # Spectral response of windows tuned for minimum first side-lobe
-#' # Convolution using a trapezoid window con be thought of as convolving twice
-#' # with square windows of different size. If the relative sizes are chosen
-#' # with care the null of the null of the second window can be placed in the
-#' # middle of the first window's first side lobe, and thereby reducing it greately.
+#' # Spectral response of windows tuned for minimum first side-lobe.
+#' # Convolution using a trapezoid window con be thought of as convolving twice with
+#' # rectangular windows of different size. If the relative sizes are chosen with
+#' # care the null of the second window can be placed in the middle of the first
+#' # side lobe of the first window, and thereby reducing it.
 #' set.seed(1)
 #' w <- 59
 #' x <- rnorm(2e4)

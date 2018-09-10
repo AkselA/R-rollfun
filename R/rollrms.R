@@ -33,3 +33,8 @@ rollrms <- function(x, w, na.pad=TRUE, partial=FALSE) {
     }
 }
 
+rollsd <- function(x, w=5) {
+    sqrt((w/(w-1)) * (TTR::runMean(x^2, w) - TTR::runMean(x, w)^2))
+}
+
+

@@ -3,9 +3,36 @@
 #' Generate coefficients for various popular window functions
 #' 
 #' @param width integer; width of the window
-#' @param type charachter; name of the window function
+#' @param type charachter; name of the window function \cr
+#' \tabular{ll}{
+#' one of: \tab \cr
+#' \code{ • square, rectangle, boxcar:} \tab Regular flat window \cr
+#' \code{ • triangle, triangular:} \tab Isosceles (symmetric) triangular window \cr
+#' \code{ • epanechnikov, welch, parabolic:} \tab Negative parabola \cr
+#' \code{ • quartic, biweight:} \tab ... \cr
+#' \code{ • triweight:} \tab ... \cr
+#' \code{ • tricube:} \tab ... \cr
+#' \code{ • cosine-smooth, cosine:} \tab ... \cr
+#' \code{ • optcosine, sine:} \tab ... \cr
+#' \code{ • hann:} \tab ... \cr
+#' \code{ • hamming:} \tab ... \cr
+#' \code{ • blackman:} \tab ... \cr
+#' \code{ • nuttall:} \tab ... \cr
+#' \code{ • blackman-nuttall:} \tab ... \cr
+#' \code{ • blackman-harris:} \tab ... \cr
+#' \code{ • flat-top:} \tab ... \cr
+#' \code{ • blackman-harris:} \tab ... \cr
+#' \code{ • kaiser-bessel, kaiser:} \tab ... \cr
+#' \code{ • lanczos:} \tab ... \cr
+#' \code{ • sinc:} \tab ... \cr
+#' \code{ • poisson:} \tab ... \cr
+#' \code{ • hann-poisson:} \tab ... \cr
+#' }
 #' @param step.adj logical; should the end points be a small step above zero?
 #' @param lev.adj character; how the levels should be scaled
+#' 
+#' @details
+#' 
 #' @export
 #' @examples
 #' # Time and frequency plots for each window 
@@ -41,8 +68,8 @@ winweights <- function(width=11, type="epanechnikov", a=3, step.adj=TRUE, lev.ad
 
     if (width<2) stop("width must be 2 or larger", call.=FALSE)
 
-    typenames <- c("square", "boxcar", "triangle", "triangular",
-      "epanechnikov", "parabola", "parabolic", "quartic", "biweight", "triweight",
+    typenames <- c("square", "rectangle", "boxcar", "triangle", "triangular",
+      "epanechnikov", "welch", "parabolic", "quartic", "biweight", "triweight",
       "tricube", "cosine", "sine", "optcosine", "cosine-smooth",
       "hann", "hamming", "blackman",  "nuttall", "blackman-nuttall",
       "blackman-harris", "flattop", "flat-top", "flat top",  "kaiser", "kaiser-bessel",
@@ -51,8 +78,8 @@ winweights <- function(width=11, type="epanechnikov", a=3, step.adj=TRUE, lev.ad
     type <- match.arg(tolower(type), typenames)
     
     if (width %% 1 != 0) {
-      width <- ceiling(width)
-      warning("width was rounded up to nearest integer", call.=FALSE)
+        width <- ceiling(width)
+        warning("width was rounded up to nearest integer", call.=FALSE)
     }
         
     s.adj <- 0
@@ -63,11 +90,12 @@ winweights <- function(width=11, type="epanechnikov", a=3, step.adj=TRUE, lev.ad
     
     kernel <- switch(type,
                      "square"=,
+                     "rectangle"=,
                      "boxcar"=rep(1, width)/width,
                      "triangle"=,
                      "triangular"=1-abs(s),
                      "epanechnikov"=,
-                     "parabola"=,
+                     "welch"=,
                      "parabolic"=(3/4)*(1-s^2),
                      "quartic"=,
                      "biweight"=(15/16)*(1-s^2)^2,

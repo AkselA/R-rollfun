@@ -10,7 +10,31 @@ winweights(width = 11, type = "epanechnikov", a = 3, step.adj = TRUE,
 \arguments{
 \item{width}{integer; width of the window}
 
-\item{type}{charachter; name of the window function}
+\item{type}{charachter; name of the window function \cr
+\tabular{ll}{
+one of: \tab \cr
+\code{ • square, rectangle, boxcar:} \tab Regular flat window \cr
+\code{ • triangle, triangular:} \tab Isosceles (symmetric) triangular window \cr
+\code{ • epanechnikov, welch, parabolic:} \tab Negative parabola \cr
+\code{ • quartic, biweight:} \tab ... \cr
+\code{ • triweight:} \tab ... \cr
+\code{ • tricube:} \tab ... \cr
+\code{ • cosine-smooth, cosine:} \tab ... \cr
+\code{ • optcosine, sine:} \tab ... \cr
+\code{ • hann:} \tab ... \cr
+\code{ • hamming:} \tab ... \cr
+\code{ • blackman:} \tab ... \cr
+\code{ • nuttall:} \tab ... \cr
+\code{ • blackman-nuttall:} \tab ... \cr
+\code{ • blackman-harris:} \tab ... \cr
+\code{ • flat-top:} \tab ... \cr
+\code{ • blackman-harris:} \tab ... \cr
+\code{ • kaiser-bessel, kaiser:} \tab ... \cr
+\code{ • lanczos:} \tab ... \cr
+\code{ • sinc:} \tab ... \cr
+\code{ • poisson:} \tab ... \cr
+\code{ • hann-poisson:} \tab ... \cr
+}}
 
 \item{step.adj}{logical; should the end points be a small step above zero?}
 
@@ -18,6 +42,9 @@ winweights(width = 11, type = "epanechnikov", a = 3, step.adj = TRUE,
 }
 \description{
 Generate coefficients for various popular window functions
+}
+\details{
+
 }
 \examples{
 # Time and frequency plots for each window 
