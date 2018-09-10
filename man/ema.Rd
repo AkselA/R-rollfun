@@ -46,3 +46,6 @@ L <- lapply(seq_along(a), function(x) bquote(alpha ==  1 / .(a[x])))
 legend("topright", legend=as.expression(L),
   bty="n", col=col, lwd=1.2, cex=0.8, y.intersp=1.2)
 }
+\seealso{
+\code{\link{dema}}, \code{\link{iema}}
+}

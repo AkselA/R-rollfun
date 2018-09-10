@@ -5,6 +5,7 @@
 #' @param l integer; length of the window
 #' @param prop numeric; proportion of the length covered by slopes
 #' @param l.slopes integer; length of the slopes. Overrides \code{prop}
+#' 
 #' @export
 #' @examples
 #' # Specifying shape using prop

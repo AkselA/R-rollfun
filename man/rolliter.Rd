@@ -11,9 +11,11 @@ rolliter(x, w = 5, iter = 4, partial = FALSE, sharp = FALSE)
 
 \item{w}{integer; width of the rolling window}
 
-\item{partial}{logical; should partial results at the beginning/end be calculated?}
+\item{partial}{logical; should partial results at the beginning/end be 
+calculated?}
 
-\item{sharp}{logical; experimental option. Should window width be reduced by one \cr
+\item{sharp}{logical; experimental option. Should window width be reduced 
+by one \cr
 for each iteration?}
 }
 \description{
@@ -73,4 +75,7 @@ for (i in 1:nrow(s)) {
 	text(0.005, 1e-20, paste0("w = ", w, "\\n", "i = ", s$it[i]), adj=c(0, 0))
 }
  
+}
+\seealso{
+\code{\link{iema}}
 }

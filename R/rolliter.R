@@ -13,17 +13,19 @@ rollmeanna <- function(x, w, front=TRUE) {
 #' 
 #' @param x numeric; data vector
 #' @param w integer; width of the rolling window
-#' @param front logical; when \code{w} is odd, should the new values be biased to the front?
+#' @param front logical; when \code{w} is odd, should the new values be biased 
+#' to the front?
 #' 
 #' @details
 #' Wrapper/extension for \code{TTR::runMean()}
+#' 
 #' @export
+#' 
 #' @examples
 #' xx <- c(3, 8, 5, 9, 6, 3, 8, 2, 5, 1)
 #' plot(xx)
 #' lines(rollmeanp(xx, w=4, front=TRUE), col="blue")
 #' lines(rollmeanp(xx, w=4, front=FALSE), col="red")
-#'  
 
 rollmeanp <- function(x, w=5, front=TRUE) {
 	mn <- TTR::runMean(x, w)
@@ -46,11 +48,16 @@ rollmeanp <- function(x, w=5, front=TRUE) {
 #' 
 #' @param x numeric; data vector
 #' @param w integer; width of the rolling window
-#' @param partial logical; should partial results at the beginning/end be calculated?
-#' @param sharp logical; experimental option. Should window width be reduced by one \cr
+#' @param partial logical; should partial results at the beginning/end be 
+#' calculated?
+#' @param sharp logical; experimental option. Should window width be reduced 
+#' by one \cr
 #' for each iteration?
 #' 
+#' @seealso \code{\link{iema}}
+#' 
 #' @export
+#' 
 #' @examples
 #' # Increasing the number of iterations progressively reduces the ringing
 #' set.seed(1)

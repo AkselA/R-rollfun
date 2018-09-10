@@ -1,7 +1,9 @@
 linewrap <- function(txt, width=90, strip.cr=FALSE, add.cr=TRUE) {
 	lin <- paste(txt, collapse=" ")
 	lin <- gsub("#'", " ", lin)
-	if (strip.cr) lin <- gsub("\\\\cr", "", lin)
+	if (strip.cr) {
+		lin <- gsub("\\\\cr", "", lin)
+	}
 	lin <- gsub("[ ]+", " ", lin)
 	words <- strsplit(lin, '\\{[^}]+ (*SKIP)(*FAIL)| ', perl=TRUE)[[1]]
 	words <- words[!nchar(words) == 0]
@@ -14,8 +16,12 @@ linewrap <- function(txt, width=90, strip.cr=FALSE, add.cr=TRUE) {
 	
 	for (i in seq_along(words.length)) {
 		llength <- llength + words.length[i]
-		if (length(words.clean[i-1]) != 0 && words.clean[i-1] == "\\cr") llength <- width + 1
-		if (llength > width) llength <- words.length[i]
+		if (length(words.clean[i-1]) != 0 && words.clean[i-1] == "\\cr") {
+		    llength <- width + 1
+		}
+		if (llength > width) {
+			llength <- words.length[i]
+		}
 		llist[[i]] <- llength
 	}
 	words[words.clean == "\\cr"] <- ""
@@ -53,16 +59,16 @@ roxcomm <- function(action="add", max.width=0, strip.cr=FALSE, add.cr=FALSE) {
     close(clip)
     close(copy)
 }
-roxcomm("add", 0)
-roxcomm("add", 80, add.cr=TRUE)
+# roxcomm("add", 0)
+# roxcomm("add", 80, add.cr=TRUE)
 
 
-require(roxygen2)
-require(devtools)
+library(roxygen2)
+library(devtools)
 
 setwd("~/Documents/R/prosjekter")
-projname <- "image"
-create(projname)
+projname <- "rollfun"
+# create(projname)
 
 # turns objects found in "projname"/data.R (project root)
 # into data files available through data()
