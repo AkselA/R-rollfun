@@ -4,7 +4,8 @@
 \alias{trapezwin}
 \title{Trapepezoid windows}
 \usage{
-trapezwin(l = 10, prop = 0.5, l.slopes)
+trapezwin(l = 10, prop = 0.5, l.slopes, scale = c("sum", "max", "mean"),
+  step = TRUE)
 }
 \arguments{
 \item{l}{integer; length of the window}
@@ -12,6 +13,11 @@ trapezwin(l = 10, prop = 0.5, l.slopes)
 \item{prop}{numeric; proportion of the length covered by slopes}
 
 \item{l.slopes}{integer; length of the slopes. Overrides \code{prop}}
+
+\item{scale}{character; how the window should be scaled. Divide by window sum (default),
+max or mean}
+
+\item{step}{logical; should the first and last point be lifted a small step from zero?}
 }
 \description{
 Create isosceles (symmetric) trapezoid windows

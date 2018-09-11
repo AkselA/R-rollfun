@@ -1,5 +1,8 @@
-ema.na <- function (x, a=2) {
-    x <- c(x[1], x)
+ema.na <- function (x, a=2, burnin=1) {
+    if (burnin == "auto") {
+        burnin <- ceiling(a)
+    }
+    x <- c(mean(x[1:burnin], na.rm=TRUE), x)
     a <- 1/a
     for (i in 2:length(x)) {
         x[i] <- (1 - a) * x[i - 1] + a * x[i]
@@ -13,19 +16,24 @@ ema.na <- function (x, a=2) {
 #' \code{ema} returns a vector whose values are the 
 #' exponentially smoothed values of the input vector
 #' 
-#' @param x a numeric vector
-#' @param a smoothing factor
+#' @param x numeric; input vector
+#' @param a numeric; smoothing factor
+#' @param burnin integer or "auto"; set the initial estimate (\eqn{S_1}{S[1]}) to
+#' the average of the first \eqn{N} values of \eqn{X} 
+#' \deqn{S_1 = \frac{1}{N}\sum_{i=1}^{N} X_i}{S[1] = mean(X[1:N])}
+#' Default is 1, if "auto" is selected it will be set to 
+#' \eqn{\lceil a \rceil}{ceiling(a)}.
 #'
-#' @details With \eqn{Y_t}{Y[t]} being the input at time \eqn{t},
+#' @details With \eqn{X_t}{X[t]} being the input at time \eqn{t},
 #' \eqn{S_t}{S[t]} being the output at time \eqn{t}, and
-#' \eqn{\alpha = 1/a} \cr – the function can be defined like this:
+#' \eqn{\alpha = 1/a} \cr – the default function can be defined like this:
 #' 
 #' \deqn{S_t =\left\{\begin{array}{lr}
-#' Y_1,                                           & t = 1 \\ 
-#' \alpha \cdot Y_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
+#' X_1,                                           & t = 1 \\ 
+#' \alpha \cdot X_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
 #' \end{array}\right.}{
-#'   S[t] = \{Y[1] for t = 1;
-#'   \alpha * Y[t] + (1 - \alpha) * S[t-1] for t > 1\}}
+#'   S[t] = \{X[1] for t = 1;
+#'   \alpha * X[t] + (1 - \alpha) * S[t-1] for t > 1\}}
 #' 
 #' The function is also sometimes referred to as an 
 #' exponentially weighted moving average (EWMA).
@@ -49,21 +57,35 @@ ema.na <- function (x, a=2) {
 #' L <- lapply(seq_along(a), function(x) bquote(alpha ==  1 / .(a[x])))
 #' legend("topright", legend=as.expression(L),
 #'   bty="n", col=col, lwd=1.2, cex=0.8, y.intersp=1.2)
+#' 
+#' # Works well with missing data
+#' # Burnin can be useful to quickly stabalize the filter
+#' set.seed(4)
+#' re <- rexp(50) * sqrt(50:1)
+#' re[sample(1:50, 5)] <- NA
+#' 
+#' plot(re)
+#' lines(ema(re, 9, burnin=1), col="red")
+#' lines(ema(re, 9, burnin=5), col="blue")
+#' lines(ema(re, 9, burnin="auto"), col="green")
 
-ema <- function(x, a=2) {
+ema <- function(x, a=2, burnin=1) {
 	if (any(is.na(x))) {
-		ema.na(x, a)
+		ema.na(x, a, burnin)
 	} else {
+        if (burnin == "auto") {
+            burnin <- ceiling(a)
+        }
 		ar <- round(a)
-		TTR::EMA(c(rep(x[1], ar), x), a, wilder=TRUE)[-(1:ar)]
+		TTR::EMA(c(rep(mean(x[1:burnin]), ar), x), a, wilder=TRUE)[-(1:ar)]
 	}
 }
 
 #' Double Exponential Moving Average
 #' 
 #' \code{dema} performs exponential smoothing twice on the same vector. \cr
-#' This is not the same as the DEMA typically used in technical trading 
-#' (eg. \code{\link{TTR::DEMA}}).
+#' This is not the same as the \code{\link{DEMA}} typically used in technical
+#' trading.
 #' 
 #' @param x a numeric vector
 #' @param a numeric; smoothing factor
@@ -75,8 +97,12 @@ ema <- function(x, a=2) {
 #'   \item{\code{av}: both \code{fb} and \code{bf}, returning the average}
 #' }
 #' 
-#' @details The moving averages are done as in \code{ema}, except that 
-#' \code{a} is square-rooted, to make the outputs more comparable.
+#' @details The moving averages are done as in \code{ema}, except that the
+#' root-two'th root of \code{a} is used, to make the outputs more comparable. \cr
+#' \cr
+#' That is
+#' 
+#' \deqn{a^* = a^{\frac{1}{\sqrt{2}}}}{a* = a^(1/sqrt(2))}
 #' 
 #' @seealso \code{\link{ema}}, \code{\link{iema}}
 #' 
@@ -120,8 +146,13 @@ dema <- function(x, a=2, direction=c("ff", "fb", "bf", "av")) {
 #' 
 #' @details \code{iema} is a generalization of \code{dema} where the
 #' exponential moving average can be applied to the vector an arbitrary number
-#' of times. Just as the square root of \code{a} is used in \code{dema},
-#' here the \code{iter}'th root of \code{a} is used for each iteration.
+#' of times. Just as the root-two'th root of \code{a} is used in \code{dema},
+#' here the root-\code{iter}'th root of \code{a} is used for each
+#' iteration. \cr
+#' \cr
+#' That is \cr
+#' 
+#' \deqn{a^* = a^{\frac{1}{\sqrt{iter}}}}{a* = a^(1/sqrt(iter))}
 #' 
 #' @seealso \code{\link{ema}}, \code{\link{dema}}, \code{\link{rolliter}}
 #' 
@@ -137,7 +168,7 @@ dema <- function(x, a=2, direction=c("ff", "fb", "bf", "av")) {
 
 iema <- function(x, a=2, iter=8, direction=c("ff", "fb", "bf", "av")) {
 	dir <- match.arg(direction)
-    formals(ema)$a <- a^(1/iter)
+    formals(ema)$a <- a^(1/sqrt(iter))
     Funcall <- function(f, ...) f(...)
 	r <- switch(dir,
         ff = Reduce(Funcall, rep(c(ema), iter), x, right=TRUE),

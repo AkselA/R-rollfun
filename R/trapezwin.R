@@ -5,6 +5,9 @@
 #' @param l integer; length of the window
 #' @param prop numeric; proportion of the length covered by slopes
 #' @param l.slopes integer; length of the slopes. Overrides \code{prop}
+#' @param scale character; how the window should be scaled. Divide by window sum (default),
+#' max or mean
+#' @param step logical; should the first and last point be lifted a small step from zero?
 #' 
 #' @export
 #' @examples
@@ -43,7 +46,7 @@
 #'       text.col="blue", adj=c(0, 0.5))
 #' }
 
-trapezwin <- function(l=10, prop=0.5, l.slopes) {
+trapezwin <- function(l=10, prop=0.5, l.slopes, scale=c("sum", "max", "mean"), step=TRUE) {
 	tri <- 1 - abs(seq(-1, 1, length.out=l))
 	if (!missing(l.slopes)) {
 		if (l.slopes < 1 || l.slopes > l %/% 2) {
@@ -53,8 +56,10 @@ trapezwin <- function(l=10, prop=0.5, l.slopes) {
 	} else {
 		tri[tri > prop] <- prop
 	}
-	tri <- tri/sum(tri)
-	tri[c(1, l)] <- tri[2]/l/10
-	tri/sum(tri)
+	if (step) {
+	    tri[c(1, l)] <- tri[2]/l
+	}
+    scale <- match.arg(scale)
+    fun <- match.fun(scale)
+    tri/fun(tri)
 }
-

@@ -28,8 +28,13 @@ iteratively exponentially smoothed values of an input vector.
 \details{
 \code{iema} is a generalization of \code{dema} where the
 exponential moving average can be applied to the vector an arbitrary number
-of times. Just as the square root of \code{a} is used in \code{dema},
-here the \code{iter}'th root of \code{a} is used for each iteration.
+of times. Just as the root-two'th root of \code{a} is used in \code{dema},
+here the root-\code{iter}'th root of \code{a} is used for each
+iteration. \cr
+\cr
+That is \cr
+
+\deqn{a^* = a^{\frac{1}{\sqrt{iter}}}}{a* = a^(1/sqrt(iter))}
 }
 \examples{
 s <- c(0, 0, 1, NA, 2, 0, 1, 1, NA, NA, 2, NA, 3, 1, 2, 1, 0, 1, NA, 0, 0, 0)

@@ -21,12 +21,16 @@ dema(x, a = 2, direction = c("ff", "fb", "bf", "av"))
 }
 \description{
 \code{dema} performs exponential smoothing twice on the same vector. \cr
-This is not the same as the DEMA typically used in technical trading 
-(eg. \code{\link{TTR::DEMA}}).
+This is not the same as the \code{\link{DEMA}} typically used in technical
+trading.
 }
 \details{
-The moving averages are done as in \code{ema}, except that 
-\code{a} is square-rooted, to make the outputs more comparable.
+The moving averages are done as in \code{ema}, except that the
+root-two'th root of \code{a} is used, to make the outputs more comparable. \cr
+\cr
+That is
+
+\deqn{a^* = a^{\frac{1}{\sqrt{2}}}}{a* = a^(1/sqrt(2))}
 }
 \examples{
 s <- c(0, 0, 1, NA, 2, 0, 1, 1, NA, NA, 2, NA, 3, 1, 2, 1, 0, 1, NA, 0, 0, 0)

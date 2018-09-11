@@ -4,28 +4,34 @@
 \alias{ema}
 \title{Exponential Moving Average}
 \usage{
-ema(x, a = 2)
+ema(x, a = 2, burnin = 1)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{x}{numeric; input vector}
 
-\item{a}{smoothing factor}
+\item{a}{numeric; smoothing factor}
+
+\item{burnin}{integer or "auto"; set the initial estimate (\eqn{S_1}{S[1]}) to
+the average of the first \eqn{N} values of \eqn{X} 
+\deqn{S_1 = \frac{1}{N}\sum_{i=1}^{N} X_i}{S[1] = mean(X[1:N])}
+Default is 1, if "auto" is selected it will be set to 
+\eqn{\lceil a \rceil}{ceiling(a)}.}
 }
 \description{
 \code{ema} returns a vector whose values are the 
 exponentially smoothed values of the input vector
 }
 \details{
-With \eqn{Y_t}{Y[t]} being the input at time \eqn{t},
+With \eqn{X_t}{X[t]} being the input at time \eqn{t},
 \eqn{S_t}{S[t]} being the output at time \eqn{t}, and
-\eqn{\alpha = 1/a} \cr – the function can be defined like this:
+\eqn{\alpha = 1/a} \cr – the default function can be defined like this:
 
 \deqn{S_t =\left\{\begin{array}{lr}
-Y_1,                                           & t = 1 \\ 
-\alpha \cdot Y_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
+X_1,                                           & t = 1 \\ 
+\alpha \cdot X_t + (1 - \alpha) \cdot S_{t-1}, & t > 1
 \end{array}\right.}{
-  S[t] = \{Y[1] for t = 1;
-  \alpha * Y[t] + (1 - \alpha) * S[t-1] for t > 1\}}
+  S[t] = \{X[1] for t = 1;
+  \alpha * X[t] + (1 - \alpha) * S[t-1] for t > 1\}}
 
 The function is also sometimes referred to as an 
 exponentially weighted moving average (EWMA).
@@ -45,6 +51,17 @@ mtext("Single impulse of magnitude 1 occuring at time = 5", line=0.2)
 L <- lapply(seq_along(a), function(x) bquote(alpha ==  1 / .(a[x])))
 legend("topright", legend=as.expression(L),
   bty="n", col=col, lwd=1.2, cex=0.8, y.intersp=1.2)
+
+# Works well with missing data
+# Burnin can be useful to quickly stabalize the filter
+set.seed(4)
+re <- rexp(50) * sqrt(50:1)
+re[sample(1:50, 5)] <- NA
+
+plot(re)
+lines(ema(re, 9, burnin=1), col="red")
+lines(ema(re, 9, burnin=5), col="blue")
+lines(ema(re, 9, burnin="auto"), col="green")
 }
 \seealso{
 \code{\link{dema}}, \code{\link{iema}}
