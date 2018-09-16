@@ -2,10 +2,10 @@
 
 A collection of rolling functions.  
 
-## Among others 
+### Among others 
 Exponential moving average, Iterative exponential moving average, Optimized windowed convolution filter, Arbitrary rolling function, Iterative rolling mean, Rolling RMS, Windowed rolling RMS.  
 
-## As well as
+### As well as
 generate trapezoid windows and lot of other popular windows (epanechnikov, biweight, triweight, hann, hamming, blackmann, kaiser-bessel, poisson, lancsoz, ...)
 
 ```R
@@ -26,7 +26,7 @@ lines(iema(x2, 100, dir="av"), col="red")
 lines(rolliter(x2, 6, 10, partial=TRUE), col="blue")
 ```
 
-### To-do
+#### To-do
 
 - [x] NA-enable ema()
 - [ ] `zoo` methods
