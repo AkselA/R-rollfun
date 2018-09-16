@@ -24,3 +24,8 @@ points(x2, pch=16, cex=0.3)
 lines(iema(x2, 100, dir="av"), col="red")
 lines(rolliter(x2, 6, 10, partial=TRUE), col="blue")
 ```
+
+# To-do
+
+- [x] NA-enable ema()
+- [ ] `zoo` methods
